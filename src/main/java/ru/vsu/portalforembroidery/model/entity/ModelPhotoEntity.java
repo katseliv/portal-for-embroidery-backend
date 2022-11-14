@@ -39,6 +39,6 @@ public class ModelPhotoEntity {
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
     @ToString.Exclude
-    List<TagEntity> tags = new ArrayList<>();
+    private List<TagEntity> tags = new ArrayList<>();
 
 }

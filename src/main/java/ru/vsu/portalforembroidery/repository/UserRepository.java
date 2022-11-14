@@ -6,4 +6,7 @@ import ru.vsu.portalforembroidery.model.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+
+    boolean existsByUsername(String username);
+
 }

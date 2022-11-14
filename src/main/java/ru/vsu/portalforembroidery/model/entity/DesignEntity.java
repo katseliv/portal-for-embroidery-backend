@@ -24,6 +24,9 @@ public class DesignEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "file")
+    private byte[] file;
+
     @ManyToOne
     @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private FolderEntity folder;
@@ -38,6 +41,7 @@ public class DesignEntity {
             joinColumns = {@JoinColumn(name = "design_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
-    List<TagEntity> tags = new ArrayList<>();
+    @ToString.Exclude
+    private List<TagEntity> tags = new ArrayList<>();
 
 }

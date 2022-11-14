@@ -55,6 +55,7 @@ CREATE TABLE embroidery.designs
 (
     id                  SERIAL PRIMARY KEY,
     name                VARCHAR(50)                                                  NOT NULL,
+    file                BYTEA                                                        NOT NULL,
     folder_id           INTEGER REFERENCES embroidery.folders (id) ON DELETE CASCADE NOT NULL,
     creator_designer_id INTEGER REFERENCES embroidery.users (id) ON DELETE CASCADE   NOT NULL
 );
