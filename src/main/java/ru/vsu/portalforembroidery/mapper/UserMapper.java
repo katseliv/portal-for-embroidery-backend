@@ -24,7 +24,7 @@ public interface UserMapper {
     UserViewDto userEntityToUserViewDto(UserEntity entity);
 
     @Named(value = "bytesArrayImage")
-    default String mapImage(final byte[] image) {
+    default String mapImage(byte[] image) {
         return Base64.getEncoder().encodeToString(image);
     }
 
@@ -32,7 +32,7 @@ public interface UserMapper {
     UserDetailsDto userEntityToUserDetailsDto(UserEntity entity);
 
     @Named(value = "role")
-    default List<Role> mapRoles(final Role role) {
+    default List<Role> mapRoles(Role role) {
         return List.of(role);
     }
 
@@ -43,7 +43,7 @@ public interface UserMapper {
     void mergeUserEntityAndUserDto(@MappingTarget UserEntity entity, UserDto dto);
 
     @Named(value = "base64StringImage")
-    default byte[] mapBase64StringImage(final String base64StringImage) {
+    default byte[] mapBase64StringImage(String base64StringImage) {
         return Base64.getDecoder().decode(base64StringImage);
     }
 

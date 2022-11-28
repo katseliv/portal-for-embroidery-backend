@@ -32,15 +32,16 @@ CREATE TABLE embroidery.users
     phone_number VARCHAR(11),
     email        VARCHAR(100) UNIQUE                      NOT NULL,
     role_id      INTEGER REFERENCES embroidery.roles (id) NOT NULL,
+    provider     VARCHAR(20) DEFAULT 'LOCAL'              NOT NULL,
     password     VARCHAR(100)                             NOT NULL
 );
 
 CREATE TABLE embroidery.designer_profiles
 (
-    id                SERIAL PRIMARY KEY,
-    user_designer_id  INTEGER REFERENCES embroidery.users (id) ON DELETE CASCADE NOT NULL,
-    experienced_since TIMESTAMP                                                  NOT NULL,
-    description       VARCHAR(500)                                               NOT NULL
+    user_id_ptr       INTEGER PRIMARY KEY,
+    experienced_since TIMESTAMP    NOT NULL,
+    description       VARCHAR(500) NOT NULL,
+    FOREIGN KEY (user_id_ptr) REFERENCES embroidery.users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE embroidery.folders
@@ -77,6 +78,8 @@ CREATE TABLE embroidery.placement_positions
     bottom_margin_position DECIMAL DEFAULT 0,
     left_margin_position   DECIMAL DEFAULT 0,
     right_margin_position  DECIMAL DEFAULT 0,
+    height_relative_size   DECIMAL DEFAULT 0,
+    width_relative_size    DECIMAL DEFAULT 0,
     height_percent         DECIMAL CHECK (height_percent <= 1) NOT NULL,
     width_percent          DECIMAL CHECK (width_percent <= 1)  NOT NULL
 );
@@ -145,9 +148,8 @@ CREATE TABLE embroidery.likes
 
 CREATE TABLE embroidery.jwt_tokens
 (
-    id       SERIAL PRIMARY KEY,
-    token    VARCHAR(500)                                               NOT NULL,
-    type     VARCHAR(50)                                                NOT NULL,
-    provider VARCHAR(20) DEFAULT 'LOCAL'                                NOT NULL,
-    user_id  INTEGER REFERENCES embroidery.users (id) ON DELETE CASCADE NOT NULL
+    id      SERIAL PRIMARY KEY,
+    token   VARCHAR(500)                                               NOT NULL,
+    type    VARCHAR(50)                                                NOT NULL,
+    user_id INTEGER REFERENCES embroidery.users (id) ON DELETE CASCADE NOT NULL
 );

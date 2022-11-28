@@ -2,7 +2,9 @@ package ru.vsu.portalforembroidery.model.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,16 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity(name = "designer_profiles")
 @Table(name = "designer_profiles")
-public class DesignerProfileEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "user_designer_id", referencedColumnName = "id")
-    private UserEntity designer;
+public class DesignerProfileEntity extends UserEntity {
 
     @Column(name = "experienced_since")
     private LocalDateTime experiencedSince;

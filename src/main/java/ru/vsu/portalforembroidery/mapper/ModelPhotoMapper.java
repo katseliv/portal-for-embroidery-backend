@@ -20,13 +20,13 @@ public interface ModelPhotoMapper {
 
     @Mapping(target = "base64StringFile", source = "file", qualifiedByName = "bytesArrayFile")
     @Mapping(target = "designName", source = "design.name")
-    @Mapping(target = "designBase64StringFile", source = "design.file")
+    @Mapping(target = "designBase64StringFile", source = "design.file", qualifiedByName = "bytesArrayFile")
     @Mapping(target = "placementPositionHeightPercent", source = "placementPosition.heightPercent")
     @Mapping(target = "placementPositionWidthPercent", source = "placementPosition.widthPercent")
     ModelPhotoViewDto modelPhotoEntityToModelPhotoViewDto(ModelPhotoEntity entity);
 
     @Named(value = "bytesArrayFile")
-    default String mapBytesArrayFile(final byte[] file) {
+    default String mapBytesArrayFile(byte[] file) {
         return Base64.getEncoder().encodeToString(file);
     }
 
@@ -37,13 +37,13 @@ public interface ModelPhotoMapper {
 
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
     @Mapping(target = "design.name", source = "designName")
-    @Mapping(target = "design.file", source = "designBase64StringFile")
+    @Mapping(target = "design.file", source = "designBase64StringFile", qualifiedByName = "base64StringFile")
     @Mapping(target = "placementPosition.heightPercent", source = "placementPositionHeightPercent")
     @Mapping(target = "placementPosition.widthPercent", source = "placementPositionWidthPercent")
     ModelPhotoEntity modelPhotoViewDtoToModelPhotoEntity(ModelPhotoViewDto dto);
 
     @Named(value = "base64StringFile")
-    default byte[] mapBase64StringFile(final String base64StringFile) {
+    default byte[] mapBase64StringFile(String base64StringFile) {
         return Base64.getDecoder().decode(base64StringFile);
     }
 

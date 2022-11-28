@@ -9,12 +9,12 @@ import javax.persistence.Converter;
 public class RoleConverter implements AttributeConverter<Role, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(final Role attribute) {
+    public Integer convertToDatabaseColumn(Role attribute) {
         return attribute == null ? null : attribute.getId();
     }
 
     @Override
-    public Role convertToEntityAttribute(final Integer dbData) {
+    public Role convertToEntityAttribute(Integer dbData) {
         return Role.of(dbData).orElse(null);
     }
 

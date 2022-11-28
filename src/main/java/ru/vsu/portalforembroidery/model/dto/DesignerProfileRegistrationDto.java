@@ -8,13 +8,12 @@ import ru.vsu.portalforembroidery.annotation.DatetimeValid;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Getter
 @ToString
 @SuperBuilder
 @EqualsAndHashCode(callSuper = false)
-public class DesignerProfileDto extends UserDto {
+public class DesignerProfileRegistrationDto extends UserRegistrationDto {
 
     @DatetimeValid
     private final String experiencedSince;

@@ -9,12 +9,12 @@ import javax.persistence.Converter;
 public class PermissionConverter implements AttributeConverter<Permission, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(final Permission attribute) {
+    public Integer convertToDatabaseColumn(Permission attribute) {
         return attribute == null ? null : attribute.getId();
     }
 
     @Override
-    public Permission convertToEntityAttribute(final Integer dbData) {
+    public Permission convertToEntityAttribute(Integer dbData) {
         return Permission.of(dbData).orElse(null);
     }
 

@@ -28,10 +28,6 @@ public class JwtTokenEntity {
     @Enumerated(EnumType.STRING)
     private JwtTokenType type;
 
-    @Column(name = "provider")
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;

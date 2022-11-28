@@ -24,7 +24,7 @@ public interface PostMapper {
     PostViewDto postEntityToPostViewDto(PostEntity entity);
 
     @Named(value = "bytesArrayFile")
-    default String mapBytesArrayFile(final byte[] file) {
+    default String mapBytesArrayFile(byte[] file) {
         return Base64.getEncoder().encodeToString(file);
     }
 
@@ -39,7 +39,7 @@ public interface PostMapper {
     PostEntity postViewDtoToPostEntity(PostViewDto dto);
 
     @Named(value = "base64StringFile")
-    default byte[] mapBase64StringFile(final String base64StringFile) {
+    default byte[] mapBase64StringFile(String base64StringFile) {
         return Base64.getDecoder().decode(base64StringFile);
     }
 

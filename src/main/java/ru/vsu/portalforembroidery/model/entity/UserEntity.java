@@ -1,6 +1,9 @@
 package ru.vsu.portalforembroidery.model.entity;
 
 import lombok.*;
+import ru.vsu.portalforembroidery.converter.PermissionConverter;
+import ru.vsu.portalforembroidery.converter.RoleConverter;
+import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.Role;
 
 import javax.persistence.*;
@@ -11,6 +14,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity(name = "users")
 @Table(name = "users")
 public class UserEntity {
@@ -39,7 +43,12 @@ public class UserEntity {
     private String email;
 
     @Column(name = "role_id")
+    @Convert(converter = RoleConverter.class)
     private Role role;
+
+    @Column(name = "provider")
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     @Column(name = "password")
     private String password;

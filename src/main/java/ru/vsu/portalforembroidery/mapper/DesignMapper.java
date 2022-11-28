@@ -24,7 +24,7 @@ public interface DesignMapper {
     DesignViewDto designEntityToDesignViewDto(DesignEntity entity);
 
     @Named(value = "bytesArrayFile")
-    default String mapBytesArrayFile(final byte[] file) {
+    default String mapBytesArrayFile(byte[] file) {
         return Base64.getEncoder().encodeToString(file);
     }
 
@@ -39,7 +39,7 @@ public interface DesignMapper {
     DesignEntity designViewDtoToDesignEntity(DesignViewDto dto);
 
     @Named(value = "base64StringFile")
-    default byte[] mapBase64StringImage(final String base64StringFile) {
+    default byte[] mapBase64StringImage(String base64StringFile) {
         return Base64.getDecoder().decode(base64StringFile);
     }
 
