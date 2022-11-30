@@ -1,7 +1,7 @@
 package ru.vsu.portalforembroidery.model.entity;
 
 import lombok.*;
-import ru.vsu.portalforembroidery.converter.PermissionConverter;
+import lombok.experimental.SuperBuilder;
 import ru.vsu.portalforembroidery.converter.RoleConverter;
 import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.Role;
@@ -10,8 +10,8 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@Builder
 @ToString
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Inheritance(strategy = InheritanceType.JOINED)

@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity(name = "comments")

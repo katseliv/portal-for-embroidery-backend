@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FolderMapper;
@@ -36,10 +37,11 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     private final FolderMapper folderMapper;
 
     @Override
+    @Transactional
     public int createFolder(FolderDto folderDto) {
         final Optional<FolderEntity> parentFolderEntity = folderRepository.findById(folderDto.getParentFolderId());
         parentFolderEntity.ifPresentOrElse(
-                (post) -> log.info("Parent Folder has been found."),
+                (folder) -> log.info("Parent Folder has been found."),
                 () -> {
                     log.warn("Parent Folder hasn't been found.");
                     throw new EntityNotFoundException("Parent Folder not found!");
@@ -62,6 +64,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FolderViewDto getFolderViewById(int id) {
         final Optional<FolderEntity> folderEntity = folderRepository.findById(id);
         folderEntity.ifPresentOrElse(
@@ -72,6 +75,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     }
 
     @Override
+    @Transactional
     public void updateFolderById(int id, FolderDto folderDto) {
         final Optional<FolderEntity> folderEntity = folderRepository.findById(id);
         folderEntity.ifPresentOrElse(
@@ -89,7 +93,9 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
         log.info("Folder with id = {} has been updated.", id);
     }
 
+    // TODO: 30.11.2022 подумать над логикой удалений папки и дизайнами этой папки
     @Override
+    @Transactional
     public void deleteFolderById(int id) {
         final Optional<FolderEntity> folderEntity = folderRepository.findById(id);
         folderEntity.ifPresentOrElse(
@@ -103,6 +109,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ViewListPage<FolderViewDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
@@ -115,6 +122,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<FolderViewDto> listFolders(Pageable pageable) {
         final List<FolderEntity> folderEntities = folderRepository.findAll(pageable).getContent();
         log.info("There have been found {} folders.", folderEntities.size());

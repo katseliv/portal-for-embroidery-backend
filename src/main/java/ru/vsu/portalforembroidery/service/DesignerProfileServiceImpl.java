@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityAlreadyExistsException;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
@@ -37,7 +38,9 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     private final DesignerProfileRepository designerProfileRepository;
     private final DesignerProfileMapper designerProfileMapper;
 
+    // TODO: 30.11.2022 подумать над логикой создания дизайнера
     @Override
+    @Transactional
     public int createDesignerProfile(DesignerProfileRegistrationDto designerProfileRegistrationDto, Provider provider) {
         if (designerProfileRepository.findByEmail(designerProfileRegistrationDto.getEmail()).isPresent()) {
             log.warn("Designer Profile with email = {} hasn't been created. Such user already exists!", designerProfileRegistrationDto.getEmail());
@@ -45,11 +48,11 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
         }
         final String password = passwordEncoder.encode(designerProfileRegistrationDto.getPassword());
         final DesignerProfileEntity designerProfileEntity = Optional.of(designerProfileRegistrationDto)
-                .map(user -> designerProfileMapper.designerRegistrationProfileViewDtoToDesignerProfileEntityWithPassword(user, password))
-                .map(user -> {
-                    user.setImage(new byte[0]);
-                    user.setProvider(provider);
-                    return designerProfileRepository.save(user);
+                .map(designerProfile -> designerProfileMapper.designerRegistrationProfileViewDtoToDesignerProfileEntityWithPassword(designerProfile, password))
+                .map(designerProfile -> {
+                    designerProfile.setImage(new byte[0]);
+                    designerProfile.setProvider(provider);
+                    return designerProfileRepository.save(designerProfile);
                 })
                 .orElseThrow(() -> new EntityCreationException("Designer Profile not created!"));
         log.info("Designer Profile with id = {} has been created.", designerProfileEntity.getId());
@@ -57,6 +60,7 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DesignerProfileViewDto getDesignerProfileViewById(int id) {
         final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(id);
         designerProfileEntity.ifPresentOrElse(
@@ -67,6 +71,7 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     }
 
     @Override
+    @Transactional
     public void updateDesignerProfileById(int id, DesignerProfileDto designerProfileDto) {
         final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(id);
         designerProfileEntity.ifPresentOrElse(
@@ -84,7 +89,9 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
         log.info("Designer Profile with id = {} has been updated.", id);
     }
 
+    // TODO: 30.11.2022 подумать над логикой удаления дизайнера
     @Override
+    @Transactional
     public void deleteDesignerProfileById(int id) {
         final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(id);
         designerProfileEntity.ifPresentOrElse(
@@ -98,6 +105,7 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ViewListPage<DesignerProfileViewDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
@@ -110,6 +118,7 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DesignerProfileViewDto> listDesignerProfiles(Pageable pageable) {
         final List<DesignerProfileEntity> designerProfileEntities = designerProfileRepository.findAll(pageable).getContent();
         log.info("There have been found {} Designer Profiles.", designerProfileEntities.size());

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.CommentMapper;
@@ -40,6 +41,7 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     private final CommentMapper commentMapper;
 
     @Override
+    @Transactional
     public int createComment(CommentDto commentDto) {
         final Optional<PostEntity> postEntity = postRepository.findById(commentDto.getPostId());
         postEntity.ifPresentOrElse(
@@ -70,6 +72,7 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CommentViewDto getCommentViewById(int id) {
         final Optional<CommentEntity> commentEntity = commentRepository.findById(id);
         commentEntity.ifPresentOrElse(
@@ -80,10 +83,11 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     }
 
     @Override
+    @Transactional
     public void updateCommentById(int id, CommentDto commentDto) {
         final Optional<CommentEntity> commentEntity = commentRepository.findById(id);
         commentEntity.ifPresentOrElse(
-                (post) -> log.info("Comment with id = {} has been found.", post.getId()),
+                (comment) -> log.info("Comment with id = {} has been found.", comment.getId()),
                 () -> {
                     log.warn("Comment hasn't been found.");
                     throw new EntityNotFoundException("Comment not found!");
@@ -98,6 +102,7 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     }
 
     @Override
+    @Transactional
     public void deleteCommentById(int id) {
         final Optional<CommentEntity> commentEntity = commentRepository.findById(id);
         commentEntity.ifPresentOrElse(
@@ -111,6 +116,7 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ViewListPage<CommentViewDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
@@ -123,6 +129,7 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentViewDto> listComments(Pageable pageable) {
         final List<CommentEntity> commentEntities = commentRepository.findAll(pageable).getContent();
         log.info("There have been found {} comments.", commentEntities.size());

@@ -50,7 +50,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
         userEntity.ifPresentOrElse(
                 (user) -> {
                     if (user.getRole() != Role.DESIGNER) {
-                        log.warn("Post hasn't been created.");
+                        log.warn("User hasn't been created.");
                         throw new EntityCreationException("User doesn't have role DESIGNER!");
                     }
                     log.info("User has been found.");
@@ -148,6 +148,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PostViewDto> listPosts(Pageable pageable) {
         final List<PostEntity> postEntities = postRepository.findAll(pageable).getContent();
         log.info("There have been found {} posts.", postEntities.size());

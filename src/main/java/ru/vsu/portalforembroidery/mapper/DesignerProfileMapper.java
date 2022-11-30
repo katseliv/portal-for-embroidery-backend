@@ -1,7 +1,6 @@
 package ru.vsu.portalforembroidery.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileDto;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileRegistrationDto;
 import ru.vsu.portalforembroidery.model.dto.view.DesignerProfileViewDto;
@@ -20,7 +19,6 @@ public interface DesignerProfileMapper {
 
     DesignerProfileEntity designerProfileViewDtoToDesignerProfileEntity(DesignerProfileViewDto dto);
 
-    @Mapping(target = "password", source = "password")
     DesignerProfileEntity designerRegistrationProfileViewDtoToDesignerProfileEntityWithPassword(DesignerProfileRegistrationDto dto, String password);
 
     List<DesignerProfileViewDto> designerProfileEntitiesToDesignerProfileViewDtoList(Iterable<DesignerProfileEntity> entities);

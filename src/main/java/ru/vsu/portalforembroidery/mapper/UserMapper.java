@@ -15,6 +15,7 @@ import ru.vsu.portalforembroidery.model.entity.UserEntity;
 import java.util.Base64;
 import java.util.List;
 
+// TODO: 30.11.2022 протестировать role
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 

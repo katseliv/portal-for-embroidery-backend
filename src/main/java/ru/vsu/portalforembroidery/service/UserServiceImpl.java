@@ -186,6 +186,7 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserForListDto> listUsers(Pageable pageable) {
         final List<UserEntity> userEntities = userRepository.findAll(pageable).getContent();
         log.info("There have been found {} users.", userEntities.size());

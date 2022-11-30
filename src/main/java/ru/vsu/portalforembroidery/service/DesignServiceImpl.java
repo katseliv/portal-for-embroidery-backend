@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.DesignMapper;
@@ -39,10 +40,11 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     private final DesignMapper designMapper;
 
     @Override
+    @Transactional
     public int createDesign(DesignDto designDto) {
         final Optional<FolderEntity> parentFolderEntity = folderRepository.findById(designDto.getFolderId());
         parentFolderEntity.ifPresentOrElse(
-                (post) -> log.info("Folder has been found."),
+                (folder) -> log.info("Folder has been found."),
                 () -> {
                     log.warn("Folder hasn't been found.");
                     throw new EntityNotFoundException("Folder not found!");
@@ -65,6 +67,7 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DesignViewDto getDesignViewById(int id) {
         final Optional<DesignEntity> designEntity = designRepository.findById(id);
         designEntity.ifPresentOrElse(
@@ -75,10 +78,11 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     }
 
     @Override
+    @Transactional
     public void updateDesignById(int id, DesignDto designDto) {
         final Optional<DesignEntity> designEntity = designRepository.findById(id);
         designEntity.ifPresentOrElse(
-                (post) -> log.info("Design with id = {} has been found.", post.getId()),
+                (design) -> log.info("Design with id = {} has been found.", design.getId()),
                 () -> {
                     log.warn("Design hasn't been found.");
                     throw new EntityNotFoundException("Design not found!");
@@ -93,6 +97,7 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     }
 
     @Override
+    @Transactional
     public void deleteDesignById(int id) {
         final Optional<DesignEntity> designEntity = designRepository.findById(id);
         designEntity.ifPresentOrElse(
@@ -106,6 +111,7 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ViewListPage<DesignViewDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
@@ -118,6 +124,7 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DesignViewDto> listDesigns(Pageable pageable) {
         final List<DesignEntity> designEntities = designRepository.findAll(pageable).getContent();
         log.info("There have been found {} designs.", designEntities.size());
