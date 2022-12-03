@@ -8,8 +8,12 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 public class PortalForEmbroideryApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PortalForEmbroideryApplication.class, args);
-	}
+    public static void main(String[] args) {
+        try {
+            SpringApplication.run(PortalForEmbroideryApplication.class, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
