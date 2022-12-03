@@ -8,7 +8,6 @@ import ru.vsu.portalforembroidery.annotation.DatetimeValid;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Getter
 @ToString

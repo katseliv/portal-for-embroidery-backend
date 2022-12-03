@@ -2,7 +2,6 @@ package ru.vsu.portalforembroidery.model.entity;
 
 import lombok.*;
 import ru.vsu.portalforembroidery.model.JwtTokenType;
-import ru.vsu.portalforembroidery.model.Provider;
 
 import javax.persistence.*;
 
