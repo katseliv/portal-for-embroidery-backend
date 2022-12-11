@@ -41,13 +41,13 @@ public class PlacementPositionDto {
     @Positive(message = "Right Margin Position is negative ot zero.")
     private final BigDecimal rightMarginPosition;
 
-    @NotNull(message = "Height Percent is null.")
-    @Positive(message = "Height Percent is negative ot zero.")
-    private final BigDecimal heightPercent;
+    @NotNull(message = "Height Relative Size is null.")
+    @Positive(message = "Height Relative Size is negative ot zero.")
+    private final BigDecimal heightRelativeSize;
 
-    @NotNull(message = "Width Percent is null.")
-    @Positive(message = "Width Percent is negative ot zero.")
-    private final BigDecimal widthPercent;
+    @NotNull(message = "Width Relative Size is null.")
+    @Positive(message = "Width Relative Size is negative ot zero.")
+    private final BigDecimal widthRelativeSize;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class PlacementPositionDtoBuilder {

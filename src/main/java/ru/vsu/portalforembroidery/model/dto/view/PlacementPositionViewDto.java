@@ -18,7 +18,7 @@ public class PlacementPositionViewDto {
     private final BigDecimal bottomMarginPosition;
     private final BigDecimal leftMarginPosition;
     private final BigDecimal rightMarginPosition;
-    private final BigDecimal heightPercent;
-    private final BigDecimal widthPercent;
+    private final BigDecimal heightRelativeSize;
+    private final BigDecimal widthRelativeSize;
 
 }

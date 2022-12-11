@@ -105,7 +105,7 @@ public class TagServiceImpl implements TagService, PaginationService<TagViewDto>
     @Transactional(readOnly = true)
     public List<TagViewDto> listTags(Pageable pageable) {
         final List<TagEntity> tagEntities = tagRepository.findAll(pageable).getContent();
-        log.info("There have been found {} Tags.", tagEntities.size());
+        log.info("There have been found {} tags.", tagEntities.size());
         return tagMapper.tagEntitiesToTagViewDtoList(tagEntities);
     }
 

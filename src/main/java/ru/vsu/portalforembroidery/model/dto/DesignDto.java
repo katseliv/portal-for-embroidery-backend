@@ -20,10 +20,6 @@ public class DesignDto {
     @NotBlank(message = "Name is blank.")
     private final String name;
 
-    @NotNull(message = "Folder Id is null.")
-    @Positive(message = "Folder Id is negative ot zero.")
-    private final Integer folderId;
-
     @NotNull(message = "Creator Designer Id is null.")
     @Positive(message = "Creator Designer Id is negative ot zero.")
     private final Integer creatorDesignerId;

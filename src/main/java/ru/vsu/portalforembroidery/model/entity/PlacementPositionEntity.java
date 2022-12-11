@@ -40,11 +40,11 @@ public class PlacementPositionEntity {
     @Column(name = "right_margin_position")
     private BigDecimal rightMarginPosition;
 
-    @Column(name = "height_percent")
-    private BigDecimal heightPercent;
+    @Column(name = "height_relative_size")
+    private BigDecimal heightRelativeSize;
 
-    @Column(name = "width_percent")
-    private BigDecimal widthPercent;
+    @Column(name = "width_relative_size")
+    private BigDecimal widthRelativeSize;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(

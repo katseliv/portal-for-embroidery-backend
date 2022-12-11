@@ -24,9 +24,6 @@ public class TagEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "count")
-    private Integer count;
-
     @ManyToMany(mappedBy = "tags")
     @ToString.Exclude
     private List<DesignEntity> designEntityList = new ArrayList<>();

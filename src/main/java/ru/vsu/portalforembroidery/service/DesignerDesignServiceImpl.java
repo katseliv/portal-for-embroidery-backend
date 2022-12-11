@@ -103,7 +103,7 @@ public class DesignerDesignServiceImpl implements DesignerDesignService, Paginat
         designerDesignEntity.ifPresentOrElse(
                 (designerDesign) -> log.info("Designer Design with id = {} has been found.", designerDesign.getId()),
                 () -> {
-                    log.warn("DesignerDesign hasn't been found.");
+                    log.warn("Designer Design hasn't been found.");
                     throw new EntityNotFoundException("Designer Design not found!");
                 });
         designerDesignRepository.deleteById(id);
@@ -127,14 +127,14 @@ public class DesignerDesignServiceImpl implements DesignerDesignService, Paginat
     @Transactional(readOnly = true)
     public List<DesignerDesignViewDto> listDesignerDesigns(Pageable pageable) {
         final List<DesignerDesignEntity> designerDesignEntities = designerDesignRepository.findAll(pageable).getContent();
-        log.info("There have been found {} Designer Designs.", designerDesignEntities.size());
+        log.info("There have been found {} designer-designs.", designerDesignEntities.size());
         return designerDesignMapper.designerDesignEntitiesToDesignerDesignViewDtoList(designerDesignEntities);
     }
 
     @Override
     public int numberOfDesignerDesigns() {
         final long numberOfDesignerDesigns = designerDesignRepository.count();
-        log.info("There have been found {} Designer Designs.", numberOfDesignerDesigns);
+        log.info("There have been found {} designer-designs.", numberOfDesignerDesigns);
         return (int) numberOfDesignerDesigns;
     }
 

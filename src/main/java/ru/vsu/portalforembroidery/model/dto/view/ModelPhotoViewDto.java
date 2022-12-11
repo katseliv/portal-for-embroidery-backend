@@ -15,7 +15,7 @@ public class ModelPhotoViewDto {
     private final String base64StringFile;
     private final String designName;
     private final String designBase64StringFile;
-    private final BigDecimal placementPositionHeightPercent;
-    private final BigDecimal placementPositionWidthPercent;
+    private final BigDecimal placementPositionHeightRelativeSize;
+    private final BigDecimal placementPositionWidthRelativeSize;
 
 }

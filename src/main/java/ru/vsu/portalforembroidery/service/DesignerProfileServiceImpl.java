@@ -97,7 +97,7 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
         designerProfileEntity.ifPresentOrElse(
                 (designerProfile) -> log.info("Designer Profile with id = {} has been found.", designerProfile.getId()),
                 () -> {
-                    log.warn("DesignerProfile hasn't been found.");
+                    log.warn("Designer Profile hasn't been found.");
                     throw new EntityNotFoundException("Designer Profile not found!");
                 });
         designerProfileRepository.deleteById(id);
@@ -121,14 +121,14 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     @Transactional(readOnly = true)
     public List<DesignerProfileViewDto> listDesignerProfiles(Pageable pageable) {
         final List<DesignerProfileEntity> designerProfileEntities = designerProfileRepository.findAll(pageable).getContent();
-        log.info("There have been found {} Designer Profiles.", designerProfileEntities.size());
+        log.info("There have been found {} designer-profiles.", designerProfileEntities.size());
         return designerProfileMapper.designerProfileEntitiesToDesignerProfileViewDtoList(designerProfileEntities);
     }
 
     @Override
     public int numberOfDesignerProfiles() {
         final long numberOfDesignerProfiles = designerProfileRepository.count();
-        log.info("There have been found {} Designer Profiles.", numberOfDesignerProfiles);
+        log.info("There have been found {} designer-profiles.", numberOfDesignerProfiles);
         return (int) numberOfDesignerProfiles;
     }
 

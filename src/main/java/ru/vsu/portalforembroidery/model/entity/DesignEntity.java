@@ -24,13 +24,6 @@ public class DesignEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "file")
-    private byte[] file;
-
-    @ManyToOne
-    @JoinColumn(name = "folder_id", referencedColumnName = "id")
-    private FolderEntity folder;
-
     @ManyToOne
     @JoinColumn(name = "creator_designer_id", referencedColumnName = "id")
     private UserEntity creatorDesigner;

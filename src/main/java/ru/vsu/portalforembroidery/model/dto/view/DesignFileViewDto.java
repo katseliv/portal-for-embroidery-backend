@@ -7,9 +7,9 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TagViewDto {
+public class DesignFileViewDto {
 
     private final Integer id;
-    private final String title;
+    private final String designName;
 
 }

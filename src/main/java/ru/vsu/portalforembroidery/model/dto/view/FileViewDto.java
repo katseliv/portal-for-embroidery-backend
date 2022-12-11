@@ -7,9 +7,10 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TagViewDto {
+public class FileViewDto {
 
     private final Integer id;
-    private final String title;
+    private final String base64StringFile;
+    private final String folderName;
 
 }

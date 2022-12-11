@@ -55,10 +55,8 @@ CREATE TABLE embroidery.folders
 CREATE TABLE embroidery.designs
 (
     id                  SERIAL PRIMARY KEY,
-    name                VARCHAR(50)                                                  NOT NULL,
-    file                BYTEA                                                        NOT NULL,
-    folder_id           INTEGER REFERENCES embroidery.folders (id) ON DELETE CASCADE NOT NULL,
-    creator_designer_id INTEGER REFERENCES embroidery.users (id) ON DELETE CASCADE   NOT NULL
+    name                VARCHAR(50)                                                NOT NULL,
+    creator_designer_id INTEGER REFERENCES embroidery.users (id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE embroidery.designers_designs
@@ -69,19 +67,31 @@ CREATE TABLE embroidery.designers_designs
     permission_id    INTEGER REFERENCES embroidery.permissions (id) ON DELETE CASCADE NOT NULL
 );
 
+CREATE TABLE embroidery.files
+(
+    id        SERIAL PRIMARY KEY,
+    file      BYTEA                                                        NOT NULL,
+    folder_id INTEGER REFERENCES embroidery.folders (id) ON DELETE CASCADE NOT NULL
+);
+
+CREATE TABLE embroidery.designs_files
+(
+    id        SERIAL PRIMARY KEY,
+    design_id INTEGER REFERENCES embroidery.designs (id) ON DELETE CASCADE NOT NULL,
+    file_id   INTEGER REFERENCES embroidery.files (id) ON DELETE CASCADE   NOT NULL
+);
+
 CREATE TABLE embroidery.placement_positions
 (
     id                     SERIAL PRIMARY KEY,
-    name                   VARCHAR(50)                         NOT NULL,
-    anchor                 INTEGER DEFAULT 1                   NOT NULL,
+    name                   VARCHAR(50)       NOT NULL,
+    anchor                 INTEGER DEFAULT 0 NOT NULL,
     top_margin_position    DECIMAL DEFAULT 0,
     bottom_margin_position DECIMAL DEFAULT 0,
     left_margin_position   DECIMAL DEFAULT 0,
     right_margin_position  DECIMAL DEFAULT 0,
     height_relative_size   DECIMAL DEFAULT 0,
-    width_relative_size    DECIMAL DEFAULT 0,
-    height_percent         DECIMAL CHECK (height_percent <= 1) NOT NULL,
-    width_percent          DECIMAL CHECK (width_percent <= 1)  NOT NULL
+    width_relative_size    DECIMAL DEFAULT 0
 );
 
 CREATE TABLE embroidery.model_photos
@@ -95,8 +105,7 @@ CREATE TABLE embroidery.model_photos
 CREATE TABLE embroidery.tags
 (
     id    SERIAL PRIMARY KEY,
-    title VARCHAR(50) NOT NULL,
-    count INTEGER DEFAULT 0
+    title VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE embroidery.designs_tags
