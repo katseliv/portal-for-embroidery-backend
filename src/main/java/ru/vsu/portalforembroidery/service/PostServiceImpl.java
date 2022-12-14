@@ -15,10 +15,8 @@ import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
-import ru.vsu.portalforembroidery.model.entity.LikeEntity;
-import ru.vsu.portalforembroidery.model.entity.LikeId;
-import ru.vsu.portalforembroidery.model.entity.PostEntity;
-import ru.vsu.portalforembroidery.model.entity.UserEntity;
+import ru.vsu.portalforembroidery.model.entity.*;
+import ru.vsu.portalforembroidery.repository.DesignRepository;
 import ru.vsu.portalforembroidery.repository.LikeRepository;
 import ru.vsu.portalforembroidery.repository.PostRepository;
 import ru.vsu.portalforembroidery.repository.UserRepository;
@@ -39,6 +37,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     private int defaultPageSize;
 
     private final UserRepository userRepository;
+    private final DesignRepository designRepository;
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
@@ -46,20 +45,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     @Override
     @Transactional
     public int createPost(PostDto postDto) {
-        final Optional<UserEntity> userEntity = userRepository.findById(postDto.getDesignerId());
-        userEntity.ifPresentOrElse(
-                (user) -> {
-                    if (user.getRole() != Role.DESIGNER) {
-                        log.warn("User hasn't been created.");
-                        throw new EntityCreationException("User doesn't have role DESIGNER!");
-                    }
-                    log.info("User has been found.");
-                },
-                () -> {
-                    log.warn("User hasn't been found.");
-                    throw new EntityNotFoundException("User not found!");
-                }
-        );
+        checkExistingOfDesignerAndDesign(postDto);
         final PostEntity postEntity = Optional.of(postDto)
                 .map(postMapper::postDtoToPostEntity)
                 .map(post -> {
@@ -86,20 +72,43 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     @Override
     @Transactional
     public void updatePostById(int id, PostDto postDto) {
+        checkExistingOfDesignerAndDesign(postDto);
         final Optional<PostEntity> postEntity = postRepository.findById(id);
         postEntity.ifPresentOrElse(
-                (post) -> log.info("Post with id = {} has been found.", post.getId()),
+                (post) -> {
+                    log.info("Post with id = {} has been found.", post.getId());
+                    postMapper.mergePostEntityAndPostDto(post, postDto);
+                    postRepository.save(post);
+                },
                 () -> {
                     log.warn("Post hasn't been found.");
                     throw new EntityNotFoundException("Post not found!");
                 });
-        Optional.of(postDto)
-                .map(postMapper::postDtoToPostEntity)
-                .map((post) -> {
-                    post.setId(id);
-                    return postRepository.save(post);
-                });
         log.info("Post with id = {} has been updated.", id);
+    }
+
+    private void checkExistingOfDesignerAndDesign(PostDto postDto) {
+        final Optional<UserEntity> userEntity = userRepository.findById(postDto.getDesignerId());
+        userEntity.ifPresentOrElse(
+                (user) -> {
+                    if (user.getRole() != Role.DESIGNER) {
+                        log.warn("User hasn't been created.");
+                        throw new EntityCreationException("User doesn't have role DESIGNER!");
+                    }
+                    log.info("User has been found.");
+                },
+                () -> {
+                    log.warn("User hasn't been found.");
+                    throw new EntityNotFoundException("User not found!");
+                }
+        );
+        final Optional<DesignEntity> designEntity = designRepository.findById(postDto.getDesignId());
+        designEntity.ifPresentOrElse(
+                (design) -> log.info("Design with id = {} has been found.", design.getId()),
+                () -> {
+                    log.warn("Design hasn't been found.");
+                    throw new EntityNotFoundException("Design not found!");
+                });
     }
 
     @Override

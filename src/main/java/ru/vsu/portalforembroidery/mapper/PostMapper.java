@@ -2,6 +2,7 @@ package ru.vsu.portalforembroidery.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.entity.PostEntity;
@@ -28,6 +29,9 @@ public interface PostMapper {
     @Mapping(target = "designer.lastName", source = "designerLastName")
     @Mapping(target = "design.name", source = "designName")
     PostEntity postViewDtoToPostEntity(PostViewDto dto);
+
+    void mergePostEntityAndPostDto(@MappingTarget PostEntity entity, PostDto dto);
+
 
     List<PostViewDto> postEntitiesToPostViewDtoList(Iterable<PostEntity> entities);
 
