@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.ModelPhotoDto;
+import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.service.ModelPhotoService;
@@ -42,7 +43,7 @@ public class ModelPhotoRestController {
     }
 
     @GetMapping
-    public ViewListPage<ModelPhotoViewDto> getModelPhotos(@RequestParam(required = false) final Map<String, String> allParams) {
+    public ViewListPage<ModelPhotoForListDto> getModelPhotos(@RequestParam(required = false) final Map<String, String> allParams) {
         return modelPhotoService.getViewListPage(allParams.get("page"), allParams.get("size"));
     }
 

@@ -11,6 +11,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.ModelPhotoMapper;
 import ru.vsu.portalforembroidery.model.dto.ModelPhotoDto;
+import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.DesignEntity;
@@ -27,7 +28,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationService<ModelPhotoViewDto> {
+public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationService<ModelPhotoForListDto> {
 
     @Value("${pagination.defaultPageNumber}")
     private int defaultPageNumber;
@@ -42,22 +43,7 @@ public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationServi
     @Override
     @Transactional
     public int createModelPhoto(ModelPhotoDto modelPhotoDto) {
-        final Optional<DesignEntity> designEntity = designRepository.findById(modelPhotoDto.getDesignId());
-        designEntity.ifPresentOrElse(
-                (design) -> log.info("Design has been found."),
-                () -> {
-                    log.warn("Design hasn't been found.");
-                    throw new EntityNotFoundException("Design not found!");
-                }
-        );
-        final Optional<PlacementPositionEntity> placementPositionEntity = placementPositionRepository.findById(modelPhotoDto.getPlacementPositionId());
-        placementPositionEntity.ifPresentOrElse(
-                (user) -> log.info("Placement Position has been found."),
-                () -> {
-                    log.warn("Placement Position hasn't been found.");
-                    throw new EntityNotFoundException("User not found!");
-                }
-        );
+        checkExistingOfDesignAndPlacementPosition(modelPhotoDto);
         final ModelPhotoEntity modelPhotoEntity = Optional.of(modelPhotoDto)
                 .map(modelPhotoMapper::modelPhotoDtoToModelPhotoEntity)
                 .map(modelPhotoRepository::save)
@@ -80,6 +66,7 @@ public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationServi
     @Override
     @Transactional
     public void updateModelPhotoById(int id, ModelPhotoDto modelPhotoDto) {
+        checkExistingOfDesignAndPlacementPosition(modelPhotoDto);
         final Optional<ModelPhotoEntity> modelPhotoEntity = modelPhotoRepository.findById(id);
         modelPhotoEntity.ifPresentOrElse(
                 (modelPhoto) -> log.info("Model Photo with id = {} has been found.", modelPhoto.getId()),
@@ -94,6 +81,25 @@ public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationServi
                     return modelPhotoRepository.save(modelPhoto);
                 });
         log.info("Model Photo with id = {} has been updated.", id);
+    }
+
+    private void checkExistingOfDesignAndPlacementPosition(ModelPhotoDto modelPhotoDto) {
+        final Optional<DesignEntity> designEntity = designRepository.findById(modelPhotoDto.getDesignId());
+        designEntity.ifPresentOrElse(
+                (design) -> log.info("Design has been found."),
+                () -> {
+                    log.warn("Design hasn't been found.");
+                    throw new EntityNotFoundException("Design not found!");
+                }
+        );
+        final Optional<PlacementPositionEntity> placementPositionEntity = placementPositionRepository.findById(modelPhotoDto.getPlacementPositionId());
+        placementPositionEntity.ifPresentOrElse(
+                (user) -> log.info("Placement Position has been found."),
+                () -> {
+                    log.warn("Placement Position hasn't been found.");
+                    throw new EntityNotFoundException("User not found!");
+                }
+        );
     }
 
     @Override
@@ -112,12 +118,12 @@ public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationServi
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<ModelPhotoViewDto> getViewListPage(String page, String size) {
+    public ViewListPage<ModelPhotoForListDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
 
         final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        final List<ModelPhotoViewDto> listModelPhotos = listModelPhotos(pageable);
+        final List<ModelPhotoForListDto> listModelPhotos = listModelPhotos(pageable);
         final int totalAmount = numberOfModelPhotos();
 
         return getViewListPage(totalAmount, pageSize, pageNumber, listModelPhotos);
@@ -125,7 +131,7 @@ public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationServi
 
     @Override
     @Transactional(readOnly = true)
-    public List<ModelPhotoViewDto> listModelPhotos(Pageable pageable) {
+    public List<ModelPhotoForListDto> listModelPhotos(Pageable pageable) {
         final List<ModelPhotoEntity> modelPhotoEntities = modelPhotoRepository.findAll(pageable).getContent();
         log.info("There have been found {} model photos.", modelPhotoEntities.size());
         return modelPhotoMapper.modelPhotoEntitiesToModelPhotoViewDtoList(modelPhotoEntities);
@@ -137,5 +143,5 @@ public class ModelPhotoServiceImpl implements ModelPhotoService, PaginationServi
         log.info("There have been found {} model photos.", numberOfModelPhotos);
         return (int) numberOfModelPhotos;
     }
-    
+
 }

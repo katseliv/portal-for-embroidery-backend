@@ -2,6 +2,7 @@ package ru.vsu.portalforembroidery.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.ModelPhotoDto;
+import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 
@@ -17,9 +18,9 @@ public interface ModelPhotoService {
 
     void deleteModelPhotoById(int id);
 
-    ViewListPage<ModelPhotoViewDto> getViewListPage(String page, String size);
+    ViewListPage<ModelPhotoForListDto> getViewListPage(String page, String size);
 
-    List<ModelPhotoViewDto> listModelPhotos(Pageable pageable);
+    List<ModelPhotoForListDto> listModelPhotos(Pageable pageable);
 
     int numberOfModelPhotos();
     

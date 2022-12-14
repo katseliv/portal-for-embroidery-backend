@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.vsu.portalforembroidery.model.dto.ModelPhotoDto;
+import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ModelPhotoViewDto;
 import ru.vsu.portalforembroidery.model.entity.ModelPhotoEntity;
 
@@ -45,6 +46,11 @@ public interface ModelPhotoMapper {
         return Base64.getDecoder().decode(base64StringFile);
     }
 
-    List<ModelPhotoViewDto> modelPhotoEntitiesToModelPhotoViewDtoList(Iterable<ModelPhotoEntity> entities);
+    @Mapping(target = "designName", source = "design.name")
+    @Mapping(target = "placementPositionHeightRelativeSize", source = "placementPosition.heightRelativeSize")
+    @Mapping(target = "placementPositionWidthRelativeSize", source = "placementPosition.widthRelativeSize")
+    ModelPhotoForListDto modelPhotoEntityToModelPhotoForListDto(ModelPhotoEntity entity);
+
+    List<ModelPhotoForListDto> modelPhotoEntitiesToModelPhotoViewDtoList(Iterable<ModelPhotoEntity> entities);
 
 }
