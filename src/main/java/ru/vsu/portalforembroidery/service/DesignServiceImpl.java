@@ -14,9 +14,9 @@ import ru.vsu.portalforembroidery.model.dto.DesignDto;
 import ru.vsu.portalforembroidery.model.dto.view.DesignViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.DesignEntity;
-import ru.vsu.portalforembroidery.model.entity.UserEntity;
+import ru.vsu.portalforembroidery.model.entity.DesignerProfileEntity;
 import ru.vsu.portalforembroidery.repository.DesignRepository;
-import ru.vsu.portalforembroidery.repository.UserRepository;
+import ru.vsu.portalforembroidery.repository.DesignerProfileRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;
@@ -33,18 +33,18 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
     private int defaultPageSize;
 
     private final DesignRepository designRepository;
-    private final UserRepository userRepository;
+    private final DesignerProfileRepository designerProfileRepository;
     private final DesignMapper designMapper;
 
     @Override
     @Transactional
     public int createDesign(DesignDto designDto) {
-        final Optional<UserEntity> userEntity = userRepository.findById(designDto.getCreatorDesignerId());
-        userEntity.ifPresentOrElse(
-                (user) -> log.info("User has been found."),
+        final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(designDto.getCreatorDesignerId());
+        designerProfileEntity.ifPresentOrElse(
+                (designerProfile) -> log.info("Designer Profile has been found."),
                 () -> {
-                    log.warn("User hasn't been found.");
-                    throw new EntityNotFoundException("User not found!");
+                    log.warn("Designer Profile hasn't been found.");
+                    throw new EntityNotFoundException("Designer Profile not found!");
                 }
         );
         final DesignEntity designEntity = Optional.of(designDto)
@@ -76,6 +76,14 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
                     log.warn("Design hasn't been found.");
                     throw new EntityNotFoundException("Design not found!");
                 });
+        final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(designDto.getCreatorDesignerId());
+        designerProfileEntity.ifPresentOrElse(
+                (designerProfile) -> log.info("Designer Profile has been found."),
+                () -> {
+                    log.warn("Designer Profile hasn't been found.");
+                    throw new EntityNotFoundException("Designer Profile not found!");
+                }
+        );
         Optional.of(designDto)
                 .map(designMapper::designDtoToDesignEntity)
                 .map((design) -> {
