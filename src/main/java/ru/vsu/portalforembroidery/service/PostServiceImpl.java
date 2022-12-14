@@ -128,19 +128,45 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     @Override
     @Transactional
     public void likePostById(int id, LikeDto likeDto) {
+        final Optional<PostEntity> postEntity = postRepository.findById(id);
+        postEntity.ifPresentOrElse(
+                (post) -> log.info("Post with id = {} has been found.", post.getId()),
+                () -> {
+                    log.warn("Post hasn't been found.");
+                    throw new EntityNotFoundException("Post not found!");
+                });
+        final Optional<UserEntity> userEntity = userRepository.findById(likeDto.getUserId());
+        userEntity.ifPresentOrElse(
+                (user) -> log.info("User has been found."),
+                () -> {
+                    log.warn("User hasn't been found.");
+                    throw new EntityNotFoundException("User not found!");
+                }
+        );
         final LikeId likeId = LikeId.builder().postId(id).userId(likeDto.getUserId()).build();
         final Optional<LikeEntity> likeEntityOptional = likeRepository.findById(likeId);
         likeEntityOptional.ifPresentOrElse(
                 (like) -> {
                     log.info("Like with userId = {} и postId = {} has been found.", like.getId().getUserId(), like.getId().getPostId());
-                    likeRepository.markAsDeletedById(likeId);
-                    log.info("Like with userId = {} и postId = {} has been deleted.", likeId.getUserId(), likeId.getPostId());
+                    if (like.isDeleted()) {
+                        likeRepository.markAsNotDeletedById(likeId);
+                        log.info("Like with userId = {} и postId = {} has been recovered.", likeId.getUserId(), likeId.getPostId());
+                    } else {
+                        likeRepository.markAsDeletedById(likeId);
+                        log.info("Like with userId = {} и postId = {} has been deleted.", likeId.getUserId(), likeId.getPostId());
+                    }
                 },
                 () -> {
                     log.warn("Like hasn't been found.");
                     final LikeEntity likeEntity = LikeEntity.builder().id(likeId).build();
                     likeRepository.save(likeEntity);
                 });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int countLikes(int id) {
+        return likeRepository.countByPostId(id);
     }
 
     @Override

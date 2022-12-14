@@ -43,22 +43,7 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     @Override
     @Transactional
     public int createComment(CommentDto commentDto) {
-        final Optional<PostEntity> postEntity = postRepository.findById(commentDto.getPostId());
-        postEntity.ifPresentOrElse(
-                (post) -> log.info("Post has been found."),
-                () -> {
-                    log.warn("Post hasn't been found.");
-                    throw new EntityNotFoundException("Post not found!");
-                }
-        );
-        final Optional<UserEntity> userEntity = userRepository.findById(commentDto.getUserId());
-        userEntity.ifPresentOrElse(
-                (user) -> log.info("User has been found."),
-                () -> {
-                    log.warn("User hasn't been found.");
-                    throw new EntityNotFoundException("User not found!");
-                }
-        );
+        checkExistingOfPostAndUser(commentDto);
         final CommentEntity commentEntity = Optional.of(commentDto)
                 .map(commentMapper::commentDtoToCommentEntity)
                 .map(comment -> {
@@ -85,20 +70,38 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     @Override
     @Transactional
     public void updateCommentById(int id, CommentDto commentDto) {
+        checkExistingOfPostAndUser(commentDto);
         final Optional<CommentEntity> commentEntity = commentRepository.findById(id);
         commentEntity.ifPresentOrElse(
-                (comment) -> log.info("Comment with id = {} has been found.", comment.getId()),
+                (comment) -> {
+                    log.info("Comment with id = {} has been found.", comment.getId());
+                    commentMapper.mergeCommentEntityAndCommentDto(comment, commentDto);
+                    commentRepository.save(comment);
+                },
                 () -> {
                     log.warn("Comment hasn't been found.");
                     throw new EntityNotFoundException("Comment not found!");
                 });
-        Optional.of(commentDto)
-                .map(commentMapper::commentDtoToCommentEntity)
-                .map((comment) -> {
-                    comment.setId(id);
-                    return commentRepository.save(comment);
-                });
         log.info("Comment with id = {} has been updated.", id);
+    }
+
+    private void checkExistingOfPostAndUser(CommentDto commentDto) {
+        final Optional<PostEntity> postEntity = postRepository.findById(commentDto.getPostId());
+        postEntity.ifPresentOrElse(
+                (post) -> log.info("Post has been found."),
+                () -> {
+                    log.warn("Post hasn't been found.");
+                    throw new EntityNotFoundException("Post not found!");
+                }
+        );
+        final Optional<UserEntity> userEntity = userRepository.findById(commentDto.getUserId());
+        userEntity.ifPresentOrElse(
+                (user) -> log.info("User has been found."),
+                () -> {
+                    log.warn("User hasn't been found.");
+                    throw new EntityNotFoundException("User not found!");
+                }
+        );
     }
 
     @Override

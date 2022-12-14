@@ -47,6 +47,11 @@ public class PostRestController {
         postService.likePostById(id, likeDto);
     }
 
+    @GetMapping("/{id}/likes")
+    public ResponseEntity<Integer> countLikesOfPost(@PathVariable final int id) {
+        return new ResponseEntity<>(postService.countLikes(id), HttpStatus.OK);
+    }
+
     @GetMapping
     public ViewListPage<PostViewDto> getPosts(@RequestParam(required = false) final Map<String, String> allParams) {
         return postService.getViewListPage(allParams.get("page"), allParams.get("size"));

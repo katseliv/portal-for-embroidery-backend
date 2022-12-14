@@ -20,6 +20,8 @@ public interface PostService {
 
     void likePostById(int id, LikeDto likeDto);
 
+    int countLikes(int id);
+
     ViewListPage<PostViewDto> getViewListPage(String page, String size);
 
     List<PostViewDto> listPosts(Pageable pageable);
