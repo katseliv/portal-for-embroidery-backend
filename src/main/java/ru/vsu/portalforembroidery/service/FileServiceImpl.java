@@ -11,6 +11,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FileMapper;
 import ru.vsu.portalforembroidery.model.dto.FileDto;
+import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.FileEntity;
@@ -25,7 +26,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class FileServiceImpl implements FileService, PaginationService<FileViewDto> {
+public class FileServiceImpl implements FileService, PaginationService<FileForListDto> {
 
     @Value("${pagination.defaultPageNumber}")
     private int defaultPageNumber;
@@ -68,7 +69,15 @@ public class FileServiceImpl implements FileService, PaginationService<FileViewD
 
     @Override
     @Transactional
-    public void updateFileById(int id, FileDto FileDto) {
+    public void updateFileById(int id, FileDto fileDto) {
+        final Optional<FolderEntity> folderEntity = folderRepository.findById(fileDto.getFolderId());
+        folderEntity.ifPresentOrElse(
+                (user) -> log.info("Folder has been found."),
+                () -> {
+                    log.warn("Folder hasn't been found.");
+                    throw new EntityNotFoundException("Folder not found!");
+                }
+        );
         final Optional<FileEntity> fileEntity = fileRepository.findById(id);
         fileEntity.ifPresentOrElse(
                 (file) -> log.info("File with id = {} has been found.", file.getId()),
@@ -76,7 +85,7 @@ public class FileServiceImpl implements FileService, PaginationService<FileViewD
                     log.warn("File hasn't been found.");
                     throw new EntityNotFoundException("File not found!");
                 });
-        Optional.of(FileDto)
+        Optional.of(fileDto)
                 .map(fileMapper::fileDtoToFileEntity)
                 .map((file) -> {
                     file.setId(id);
@@ -101,12 +110,12 @@ public class FileServiceImpl implements FileService, PaginationService<FileViewD
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<FileViewDto> getViewListPage(String page, String size) {
+    public ViewListPage<FileForListDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
 
         final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        final List<FileViewDto> listFiles = listFiles(pageable);
+        final List<FileForListDto> listFiles = listFiles(pageable);
         final int totalAmount = numberOfFiles();
 
         return getViewListPage(totalAmount, pageSize, pageNumber, listFiles);
@@ -114,10 +123,10 @@ public class FileServiceImpl implements FileService, PaginationService<FileViewD
 
     @Override
     @Transactional(readOnly = true)
-    public List<FileViewDto> listFiles(Pageable pageable) {
+    public List<FileForListDto> listFiles(Pageable pageable) {
         final List<FileEntity> fileEntities = fileRepository.findAll(pageable).getContent();
         log.info("There have been found {} files.", fileEntities.size());
-        return fileMapper.fileEntitiesToFileViewDtoList(fileEntities);
+        return fileMapper.fileEntitiesToFileForListDtoList(fileEntities);
     }
 
     @Override
