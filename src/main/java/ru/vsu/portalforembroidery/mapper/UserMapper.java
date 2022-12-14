@@ -50,6 +50,6 @@ public interface UserMapper {
 
     void mergeUserEntityAndUserDtoWithoutPicture(@MappingTarget UserEntity entity, UserDto dto);
 
-    List<UserForListDto> userEntitiesToUserViewDtoList(Iterable<UserEntity> entities);
+    List<UserForListDto> userEntitiesToUserForListDtoList(Iterable<UserEntity> entities);
 
 }

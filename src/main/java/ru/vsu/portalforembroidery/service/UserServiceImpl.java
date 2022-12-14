@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
     public List<UserForListDto> listDesigners(Pageable pageable) {
         final List<UserEntity> userEntities = userRepository.findAllByRole(Role.DESIGNER, pageable);
         log.info("There have been found {} designers.", userEntities.size());
-        return userMapper.userEntitiesToUserViewDtoList(userEntities);
+        return userMapper.userEntitiesToUserForListDtoList(userEntities);
     }
 
     @Override
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
     public List<UserForListDto> listUsers(Pageable pageable) {
         final List<UserEntity> userEntities = userRepository.findAll(pageable).getContent();
         log.info("There have been found {} users.", userEntities.size());
-        return userMapper.userEntitiesToUserViewDtoList(userEntities);
+        return userMapper.userEntitiesToUserForListDtoList(userEntities);
     }
 
     @Override
