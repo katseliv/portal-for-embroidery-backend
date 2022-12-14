@@ -17,11 +17,11 @@ import javax.validation.constraints.Positive;
 public class CommentDto {
 
     @NotNull(message = "Post Id is null.")
-    @Positive(message = "Post Id is negative ot zero.")
+    @Positive(message = "Post Id is negative or zero.")
     private final Integer postId;
 
     @NotNull(message = "User Id is null.")
-    @Positive(message = "User Id is negative ot zero.")
+    @Positive(message = "User Id is negative or zero.")
     private final Integer userId;
 
     @NotNull(message = "Text is null.")

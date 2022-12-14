@@ -1,11 +1,8 @@
 package ru.vsu.portalforembroidery.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.*;
 import ru.vsu.portalforembroidery.annotation.PasswordMatch;
 import ru.vsu.portalforembroidery.annotation.PasswordValid;
 import ru.vsu.portalforembroidery.annotation.UsernameValid;
@@ -14,8 +11,8 @@ import javax.validation.constraints.*;
 
 @PasswordMatch
 @Getter
+@Builder
 @ToString
-@SuperBuilder
 @EqualsAndHashCode
 @AllArgsConstructor
 @JsonDeserialize(builder = UserRegistrationDto.UserRegistrationDtoBuilder.class)
@@ -49,7 +46,7 @@ public class UserRegistrationDto {
     private final String email;
 
     @NotNull(message = "Role Id is null.")
-    @Positive(message = "Role Id is negative ot zero.")
+    @Positive(message = "Role Id is negative or zero.")
     private final Integer roleId;
 
     @NotNull(message = "Password is null.")
@@ -61,5 +58,10 @@ public class UserRegistrationDto {
     @NotBlank(message = "Password Confirmation is blank.")
     @PasswordValid
     private final String passwordConfirmation;
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class UserRegistrationDtoBuilder {
+
+    }
 
 }

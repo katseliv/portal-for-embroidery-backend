@@ -20,11 +20,11 @@ public class FolderDto {
     @NotBlank(message = "Name is blank.")
     private final String name;
 
-    @Positive(message = "Parent Folder Id is negative ot zero.")
+    @Positive(message = "Parent Folder Id is negative or zero.")
     private final Integer parentFolderId;
 
     @NotNull(message = "Creator Designer Id is null.")
-    @Positive(message = "Creator Designer Id is negative ot zero.")
+    @Positive(message = "Creator Designer Id is negative or zero.")
     private final Integer creatorDesignerId;
 
     @JsonPOJOBuilder(withPrefix = "")

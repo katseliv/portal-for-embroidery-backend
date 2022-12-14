@@ -55,6 +55,8 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
                 .map(user -> userMapper.userRegistrationDtoToUserEntityWithPassword(user, password))
                 .map(user -> {
                     user.setImage(new byte[0]);
+                    user.setRole(Role.of(userRegistrationDto.getRoleId())
+                            .orElseThrow(() -> new EntityCreationException("User not created!")));
                     user.setProvider(provider);
                     return userRepository.save(user);
                 })

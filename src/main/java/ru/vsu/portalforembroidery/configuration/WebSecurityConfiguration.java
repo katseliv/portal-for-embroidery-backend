@@ -7,10 +7,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import ru.vsu.portalforembroidery.mapper.UserMapper;
 import ru.vsu.portalforembroidery.repository.UserRepository;
 import ru.vsu.portalforembroidery.service.UserDetailsServiceImpl;
@@ -18,23 +18,21 @@ import ru.vsu.portalforembroidery.service.UserDetailsServiceImpl;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(passwordEncoder());
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsServiceBean())
+                .passwordEncoder(passwordEncoder())
+                .and()
+                .build();
     }
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Override
     public UserDetailsService userDetailsServiceBean() {
         return new UserDetailsServiceImpl(userRepository, userMapper);
     }
@@ -44,9 +42,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(final HttpSecurity httpSecurity) {
-
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .cors()
+                .and()
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .anyRequest().permitAll();
+        return httpSecurity.build();
     }
 
 }

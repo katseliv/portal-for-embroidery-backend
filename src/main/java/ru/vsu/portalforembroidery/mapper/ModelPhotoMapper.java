@@ -20,7 +20,6 @@ public interface ModelPhotoMapper {
 
     @Mapping(target = "base64StringFile", source = "file", qualifiedByName = "bytesArrayFile")
     @Mapping(target = "designName", source = "design.name")
-    @Mapping(target = "designBase64StringFile", source = "design.file", qualifiedByName = "bytesArrayFile")
     @Mapping(target = "placementPositionHeightRelativeSize", source = "placementPosition.heightRelativeSize")
     @Mapping(target = "placementPositionWidthRelativeSize", source = "placementPosition.widthRelativeSize")
     ModelPhotoViewDto modelPhotoEntityToModelPhotoViewDto(ModelPhotoEntity entity);
@@ -37,7 +36,6 @@ public interface ModelPhotoMapper {
 
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
     @Mapping(target = "design.name", source = "designName")
-    @Mapping(target = "design.file", source = "designBase64StringFile", qualifiedByName = "base64StringFile")
     @Mapping(target = "placementPosition.heightRelativeSize", source = "placementPositionHeightRelativeSize")
     @Mapping(target = "placementPosition.widthRelativeSize", source = "placementPositionWidthRelativeSize")
     ModelPhotoEntity modelPhotoViewDtoToModelPhotoEntity(ModelPhotoViewDto dto);

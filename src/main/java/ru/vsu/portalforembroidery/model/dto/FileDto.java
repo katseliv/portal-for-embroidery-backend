@@ -19,7 +19,7 @@ public class FileDto {
     private final String base64StringFile;
 
     @NotNull(message = "Folder Id is null.")
-    @Positive(message = "Folder Id is negative ot zero.")
+    @Positive(message = "Folder Id is negative or zero.")
     private final Integer folderId;
 
     @JsonPOJOBuilder(withPrefix = "")

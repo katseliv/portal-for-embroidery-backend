@@ -22,31 +22,31 @@ public class PlacementPositionDto {
     private final String name;
 
     @NotNull(message = "Anchor is null.")
-    @Positive(message = "Anchor is negative ot zero.")
+    @Positive(message = "Anchor is negative or zero.")
     private final Integer anchor;
 
     @NotNull(message = "Top Margin Position is null.")
-    @Positive(message = "Top Margin Position is negative ot zero.")
+    @Positive(message = "Top Margin Position is negative or zero.")
     private final BigDecimal topMarginPosition;
 
     @NotNull(message = "Bottom Margin Position is null.")
-    @Positive(message = "Bottom Margin Position is negative ot zero.")
+    @Positive(message = "Bottom Margin Position is negative or zero.")
     private final BigDecimal bottomMarginPosition;
 
     @NotNull(message = "Left Margin Position is null.")
-    @Positive(message = "Left Margin Position is negative ot zero.")
+    @Positive(message = "Left Margin Position is negative or zero.")
     private final BigDecimal leftMarginPosition;
 
     @NotNull(message = "Right Margin Position is null.")
-    @Positive(message = "Right Margin Position is negative ot zero.")
+    @Positive(message = "Right Margin Position is negative or zero.")
     private final BigDecimal rightMarginPosition;
 
     @NotNull(message = "Height Relative Size is null.")
-    @Positive(message = "Height Relative Size is negative ot zero.")
+    @Positive(message = "Height Relative Size is negative or zero.")
     private final BigDecimal heightRelativeSize;
 
     @NotNull(message = "Width Relative Size is null.")
-    @Positive(message = "Width Relative Size is negative ot zero.")
+    @Positive(message = "Width Relative Size is negative or zero.")
     private final BigDecimal widthRelativeSize;
 
     @JsonPOJOBuilder(withPrefix = "")

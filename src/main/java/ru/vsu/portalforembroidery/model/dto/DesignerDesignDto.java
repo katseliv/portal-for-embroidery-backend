@@ -16,15 +16,15 @@ import javax.validation.constraints.Positive;
 public class DesignerDesignDto {
 
     @NotNull(message = "Designer Id is null.")
-    @Positive(message = "Designer Id is negative ot zero.")
+    @Positive(message = "Designer Id is negative or zero.")
     private final Integer designerId;
 
     @NotNull(message = "Design Id is null.")
-    @Positive(message = "Design Id is negative ot zero.")
+    @Positive(message = "Design Id is negative or zero.")
     private final Integer designId;
 
     @NotNull(message = "Permission Id is null.")
-    @Positive(message = "Permission Id is negative ot zero.")
+    @Positive(message = "Permission Id is negative or zero.")
     private final Integer permissionId;
 
     @JsonPOJOBuilder(withPrefix = "")

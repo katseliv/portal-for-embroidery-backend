@@ -21,7 +21,7 @@ public class DesignDto {
     private final String name;
 
     @NotNull(message = "Creator Designer Id is null.")
-    @Positive(message = "Creator Designer Id is negative ot zero.")
+    @Positive(message = "Creator Designer Id is negative or zero.")
     private final Integer creatorDesignerId;
 
     @JsonPOJOBuilder(withPrefix = "")

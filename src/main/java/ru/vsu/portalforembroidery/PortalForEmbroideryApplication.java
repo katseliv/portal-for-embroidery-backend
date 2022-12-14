@@ -9,11 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 public class PortalForEmbroideryApplication {
 
     public static void main(String[] args) {
-        try {
-            SpringApplication.run(PortalForEmbroideryApplication.class, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SpringApplication.run(PortalForEmbroideryApplication.class, args);
     }
 
 }

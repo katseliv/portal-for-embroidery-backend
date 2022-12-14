@@ -17,11 +17,11 @@ import javax.validation.constraints.Positive;
 public class PostDto {
 
     @NotNull(message = "Designer Id is null.")
-    @Positive(message = "Designer Id is negative ot zero.")
+    @Positive(message = "Designer Id is negative or zero.")
     private final Integer designerId;
 
     @NotNull(message = "Design Id is null.")
-    @Positive(message = "Design Id is negative ot zero.")
+    @Positive(message = "Design Id is negative or zero.")
     private final Integer designId;
 
     @NotNull(message = "Description is null.")

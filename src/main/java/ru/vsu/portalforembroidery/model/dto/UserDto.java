@@ -1,35 +1,35 @@
 package ru.vsu.portalforembroidery.model.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.*;
 import ru.vsu.portalforembroidery.annotation.ImageValid;
 
 import javax.validation.constraints.*;
 
 @Getter
+@Builder
 @ToString
-@SuperBuilder
 @EqualsAndHashCode
+@AllArgsConstructor
+@JsonDeserialize(builder = UserDto.UserDtoBuilder.class)
 public class UserDto {
 
     @NotNull(message = "Username is null.")
     @NotBlank(message = "Username is blank.")
-    @Pattern(regexp = ".*([A-Z]|[a-z]).*", message = "Username must contain a letter.")
+    @Pattern(regexp = ".*([A-Z]|[a-z]|[А-Я]|[а-я]).*", message = "Username must contain a letter.")
     private final String username;
 
     @NotNull(message = "First Name is null.")
     @NotBlank(message = "First Name is blank.")
-    @Pattern(regexp = "^([A-Z]|[a-z])+$", message = "First Name mustn't contain a number.")
+    @Pattern(regexp = "^([A-Z]|[a-z]|[А-Я]|[а-я])+$", message = "First Name mustn't contain a number.")
     private final String firstName;
 
     @NotNull(message = "Last Name is null.")
     @NotBlank(message = "Last Name is blank.")
-    @Pattern(regexp = "^([A-Z]|[a-z])+$", message = "Last Name mustn't contain a number.")
+    @Pattern(regexp = "^([A-Z]|[a-z]|[А-Я]|[а-я])+$", message = "Last Name mustn't contain a number.")
     private final String lastName;
 
-    @NotNull(message = "Image is null.")
     @NotBlank(message = "Image is blank.")
     @ImageValid
     private final String base64StringImage;
@@ -41,7 +41,12 @@ public class UserDto {
     private final String phoneNumber;
 
     @NotNull(message = "Role Id is null.")
-    @Positive(message = "Role Id is negative ot zero.")
+    @Positive(message = "Role Id is negative or zero.")
     private final Integer roleId;
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class UserDtoBuilder {
+
+    }
 
 }

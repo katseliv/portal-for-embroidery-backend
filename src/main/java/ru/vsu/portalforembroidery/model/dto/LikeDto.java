@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
 public class LikeDto {
 
     @NotNull(message = "User Id is null.")
-    @Positive(message = "User Id is negative ot zero.")
+    @Positive(message = "User Id is negative or zero.")
     private final Integer userId;
 
     @JsonPOJOBuilder(withPrefix = "")
