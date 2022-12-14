@@ -13,10 +13,10 @@ import ru.vsu.portalforembroidery.mapper.FolderMapper;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.entity.DesignerProfileEntity;
 import ru.vsu.portalforembroidery.model.entity.FolderEntity;
-import ru.vsu.portalforembroidery.model.entity.UserEntity;
+import ru.vsu.portalforembroidery.repository.DesignerProfileRepository;
 import ru.vsu.portalforembroidery.repository.FolderRepository;
-import ru.vsu.portalforembroidery.repository.UserRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;
@@ -33,31 +33,21 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     private int defaultPageSize;
 
     private final FolderRepository folderRepository;
-    private final UserRepository userRepository;
+    private final DesignerProfileRepository designerProfileRepository;
     private final FolderMapper folderMapper;
 
     @Override
     @Transactional
     public int createFolder(FolderDto folderDto) {
-        final Optional<FolderEntity> parentFolderEntity = folderRepository.findById(folderDto.getParentFolderId());
-        parentFolderEntity.ifPresentOrElse(
-                (folder) -> log.info("Parent Folder has been found."),
-                () -> {
-                    log.warn("Parent Folder hasn't been found.");
-                    throw new EntityNotFoundException("Parent Folder not found!");
-                }
-        );
-        final Optional<UserEntity> userEntity = userRepository.findById(folderDto.getCreatorDesignerId());
-        userEntity.ifPresentOrElse(
-                (user) -> log.info("User has been found."),
-                () -> {
-                    log.warn("User hasn't been found.");
-                    throw new EntityNotFoundException("User not found!");
-                }
-        );
+        checkExistingDesignerProfile(folderDto);
+        final FolderEntity parentFolderEntity = getParentFolder(folderDto);
         final FolderEntity folderEntity = Optional.of(folderDto)
                 .map(folderMapper::folderDtoToFolderEntity)
-                .map(folderRepository::save)
+                .map((folder) -> {
+                    folder.setParentFolder(parentFolderEntity);
+                    folderRepository.save(folder);
+                    return folder;
+                })
                 .orElseThrow(() -> new EntityCreationException("Folder hasn't been created!"));
         log.info("Folder with id = {} has been created.", folderEntity.getId());
         return folderEntity.getId();
@@ -77,6 +67,8 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     @Override
     @Transactional
     public void updateFolderById(int id, FolderDto folderDto) {
+        checkExistingDesignerProfile(folderDto);
+        final FolderEntity parentFolderEntity = getParentFolder(folderDto);
         final Optional<FolderEntity> folderEntity = folderRepository.findById(id);
         folderEntity.ifPresentOrElse(
                 (folder) -> log.info("Folder with id = {} has been found.", folder.getId()),
@@ -88,9 +80,36 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
                 .map(folderMapper::folderDtoToFolderEntity)
                 .map((folder) -> {
                     folder.setId(id);
+                    folder.setParentFolder(parentFolderEntity);
                     return folderRepository.save(folder);
                 });
         log.info("Folder with id = {} has been updated.", id);
+    }
+
+    private void checkExistingDesignerProfile(FolderDto folderDto) {
+        final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(folderDto.getCreatorDesignerId());
+        designerProfileEntity.ifPresentOrElse(
+                (designerProfile) -> log.info("Designer Profile has been found."),
+                () -> {
+                    log.warn("Designer Profile hasn't been found.");
+                    throw new EntityNotFoundException("Designer Profile not found!");
+                }
+        );
+    }
+
+    private FolderEntity getParentFolder(FolderDto folderDto) {
+        if (folderDto.getParentFolderId() != null) {
+            final Optional<FolderEntity> parentFolderEntityOptional = folderRepository.findById(folderDto.getParentFolderId());
+            if (parentFolderEntityOptional.isPresent()) {
+                log.info("Parent Folder has been found.");
+                return parentFolderEntityOptional.get();
+            } else {
+                log.warn("Parent Folder hasn't been found.");
+                throw new EntityNotFoundException("Parent Folder not found!");
+            }
+        } else {
+            return null;
+        }
     }
 
     // TODO: 30.11.2022 подумать над логикой удалений папки и дизайнами этой папки
