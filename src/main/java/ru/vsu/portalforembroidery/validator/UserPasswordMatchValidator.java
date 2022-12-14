@@ -6,7 +6,7 @@ import ru.vsu.portalforembroidery.model.dto.UserRegistrationDto;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class PasswordMatchValidator implements ConstraintValidator<PasswordMatch, UserRegistrationDto> {
+public class UserPasswordMatchValidator implements ConstraintValidator<PasswordMatch, UserRegistrationDto> {
 
     @Override
     public boolean isValid(final UserRegistrationDto userRegistrationDto, final ConstraintValidatorContext context) {

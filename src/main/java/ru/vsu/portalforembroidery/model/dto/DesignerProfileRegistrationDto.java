@@ -46,10 +46,6 @@ public class DesignerProfileRegistrationDto {
     @Email(message = "Email invalid.")
     private final String email;
 
-    @NotNull(message = "Role Id is null.")
-    @Positive(message = "Role Id is negative or zero.")
-    private final Integer roleId;
-
     @NotNull(message = "Password is null.")
     @NotBlank(message = "Password is blank.")
     @PasswordValid
@@ -63,8 +59,8 @@ public class DesignerProfileRegistrationDto {
     @DatetimeValid
     private final String experiencedSince;
 
-    @NotNull(message = "Name is null.")
-    @NotBlank(message = "Name is blank.")
+    @NotNull(message = "Description is null.")
+    @NotBlank(message = "Description is blank.")
     private final String description;
 
     @JsonPOJOBuilder(withPrefix = "")

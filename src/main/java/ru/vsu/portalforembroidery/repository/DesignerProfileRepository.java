@@ -11,4 +11,6 @@ public interface DesignerProfileRepository extends JpaRepository<DesignerProfile
 
     Optional<DesignerProfileEntity> findByEmail(String email);
 
+    boolean existsByUsername(String username);
+
 }

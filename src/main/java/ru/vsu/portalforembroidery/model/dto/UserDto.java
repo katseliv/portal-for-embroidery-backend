@@ -40,6 +40,11 @@ public class UserDto {
     @Size(min = 7, max = 11, message = "Phone Number is out of range {7, 11}.")
     private final String phoneNumber;
 
+    @NotNull(message = "Email is null.")
+    @NotBlank(message = "Email is blank.")
+    @Email(message = "Email invalid.")
+    private final String email;
+
     @NotNull(message = "Role Id is null.")
     @Positive(message = "Role Id is negative or zero.")
     private final Integer roleId;

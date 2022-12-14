@@ -13,6 +13,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.DesignerProfileMapper;
 import ru.vsu.portalforembroidery.model.Provider;
+import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileDto;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileRegistrationDto;
 import ru.vsu.portalforembroidery.model.dto.view.DesignerProfileViewDto;
@@ -22,6 +23,7 @@ import ru.vsu.portalforembroidery.repository.DesignerProfileRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -51,6 +53,7 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
                 .map(designerProfile -> designerProfileMapper.designerRegistrationProfileViewDtoToDesignerProfileEntityWithPassword(designerProfile, password))
                 .map(designerProfile -> {
                     designerProfile.setImage(new byte[0]);
+                    designerProfile.setRole(Role.DESIGNER);
                     designerProfile.setProvider(provider);
                     return designerProfileRepository.save(designerProfile);
                 })
@@ -73,20 +76,24 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     @Override
     @Transactional
     public void updateDesignerProfileById(int id, DesignerProfileDto designerProfileDto) {
-        final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(id);
-        designerProfileEntity.ifPresentOrElse(
-                (designerProfile) -> log.info("Designer Profile with id = {} has been found.", designerProfile.getId()),
-                () -> {
-                    log.warn("Designer Profile hasn't been found.");
-                    throw new EntityNotFoundException("Designer Profile not found!");
-                });
-        Optional.of(designerProfileDto)
-                .map(designerProfileMapper::designerProfileDtoToDesignerProfileEntity)
-                .map((designerProfile) -> {
-                    designerProfile.setId(id);
-                    return designerProfileRepository.save(designerProfile);
-                });
-        log.info("Designer Profile with id = {} has been updated.", id);
+        final DesignerProfileEntity designerProfileEntity = designerProfileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Designer Profile not found!"));
+
+        final String username = designerProfileDto.getUsername();
+        if (!Objects.equals(username, designerProfileEntity.getUsername()) && designerProfileRepository.existsByUsername(username)) {
+            log.warn("Designer Profile with username = {} hasn't been updated. Such username already exists in the database!", username);
+            throw new EntityAlreadyExistsException("Such username already exists!");
+        }
+
+        if (designerProfileDto.getBase64StringImage().isEmpty()) {
+            designerProfileMapper.mergeDesignerProfileEntityAndDesignerProfileDtoWithoutPicture(designerProfileEntity, designerProfileDto);
+            designerProfileRepository.save(designerProfileEntity);
+            log.info("Designer Profile with id = {} has been updated without picture.", id);
+        } else {
+            designerProfileMapper.mergeDesignerProfileEntityAndDesignerProfileDto(designerProfileEntity, designerProfileDto);
+            designerProfileRepository.save(designerProfileEntity);
+            log.info("Designer Profile with id = {} has been updated with picture.", id);
+        }
     }
 
     // TODO: 30.11.2022 подумать над логикой удаления дизайнера
