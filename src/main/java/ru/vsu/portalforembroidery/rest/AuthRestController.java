@@ -18,10 +18,12 @@ import ru.vsu.portalforembroidery.model.response.JwtResponse;
 import ru.vsu.portalforembroidery.model.response.LoginResponse;
 import ru.vsu.portalforembroidery.service.AuthService;
 import ru.vsu.portalforembroidery.utils.SecurityContextFacade;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 
+@ApiIgnore
 @Slf4j
 @AllArgsConstructor
 @RestController
