@@ -1,9 +1,6 @@
 package ru.vsu.portalforembroidery.model.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import java.io.Serializable;
@@ -13,6 +10,8 @@ import java.util.Objects;
 @Setter
 @Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class LikeId implements Serializable {
 
     @Column(name = "post_id")
