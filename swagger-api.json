@@ -1,0 +1,2952 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "FCS Diploma Project.",
+    "version": "1.0",
+    "title": "Portal For Embroidery API",
+    "contact": {
+      "name": "Ekaterina Selivanova",
+      "url": "https://github.com/katseliv",
+      "email": "selivanova_e_a@sc.vsu.ru"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "comment-rest-controller",
+      "description": "Comment Rest Controller"
+    },
+    {
+      "name": "design-rest-controller",
+      "description": "Design Rest Controller"
+    },
+    {
+      "name": "designer-profile-rest-controller",
+      "description": "Designer Profile Rest Controller"
+    },
+    {
+      "name": "folder-rest-controller",
+      "description": "Folder Rest Controller"
+    },
+    {
+      "name": "model-photo-rest-controller",
+      "description": "Model Photo Rest Controller"
+    },
+    {
+      "name": "placement-position-controller",
+      "description": "Placement Position Controller"
+    },
+    {
+      "name": "post-rest-controller",
+      "description": "Post Rest Controller"
+    },
+    {
+      "name": "tag-rest-controller",
+      "description": "Tag Rest Controller"
+    },
+    {
+      "name": "user-rest-controller",
+      "description": "User Rest Controller"
+    }
+  ],
+  "paths": {
+    "/api/v1/comments": {
+      "get": {
+        "tags": [
+          "comment-rest-controller"
+        ],
+        "summary": "getComments",
+        "operationId": "getCommentsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«CommentViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "comment-rest-controller"
+        ],
+        "summary": "createComment",
+        "operationId": "createCommentUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "commentDto",
+            "description": "commentDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/comments/{id}": {
+      "get": {
+        "tags": [
+          "comment-rest-controller"
+        ],
+        "summary": "getComment",
+        "operationId": "getCommentUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommentViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "comment-rest-controller"
+        ],
+        "summary": "updateComment",
+        "operationId": "updateCommentUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "commentDto",
+            "description": "commentDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentDto"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "comment-rest-controller"
+        ],
+        "summary": "deleteComment",
+        "operationId": "deleteCommentUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/designer-profiles": {
+      "get": {
+        "tags": [
+          "designer-profile-rest-controller"
+        ],
+        "summary": "getDesignerProfiles",
+        "operationId": "getDesignerProfilesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«DesignerProfileViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "designer-profile-rest-controller"
+        ],
+        "summary": "createDesignerProfile",
+        "operationId": "createDesignerProfileUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "designerProfileRegistrationDto",
+            "description": "designerProfileRegistrationDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DesignerProfileRegistrationDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/designer-profiles/{id}": {
+      "get": {
+        "tags": [
+          "designer-profile-rest-controller"
+        ],
+        "summary": "getDesignerProfile",
+        "operationId": "getDesignerProfileUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DesignerProfileViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "designer-profile-rest-controller"
+        ],
+        "summary": "updateDesignerProfile",
+        "operationId": "updateDesignerProfileUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "designerProfileDto",
+            "description": "designerProfileDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DesignerProfileDto"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "designer-profile-rest-controller"
+        ],
+        "summary": "deleteDesignerProfile",
+        "operationId": "deleteDesignerProfileUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/designs": {
+      "get": {
+        "tags": [
+          "design-rest-controller"
+        ],
+        "summary": "getDesigns",
+        "operationId": "getDesignsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«DesignViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "design-rest-controller"
+        ],
+        "summary": "createDesign",
+        "operationId": "createDesignUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "designDto",
+            "description": "designDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DesignDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/designs/{id}": {
+      "get": {
+        "tags": [
+          "design-rest-controller"
+        ],
+        "summary": "getDesign",
+        "operationId": "getDesignUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DesignViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "design-rest-controller"
+        ],
+        "summary": "updateDesign",
+        "operationId": "updateDesignUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "designDto",
+            "description": "designDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DesignDto"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "design-rest-controller"
+        ],
+        "summary": "deleteDesign",
+        "operationId": "deleteDesignUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/folders": {
+      "get": {
+        "tags": [
+          "folder-rest-controller"
+        ],
+        "summary": "getFolders",
+        "operationId": "getFoldersUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«FolderViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "folder-rest-controller"
+        ],
+        "summary": "createFolder",
+        "operationId": "createFolderUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "folderDto",
+            "description": "folderDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FolderDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/folders/{id}": {
+      "get": {
+        "tags": [
+          "folder-rest-controller"
+        ],
+        "summary": "getFolder",
+        "operationId": "getFolderUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/FolderViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "folder-rest-controller"
+        ],
+        "summary": "updateFolder",
+        "operationId": "updateFolderUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "folderDto",
+            "description": "folderDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FolderDto"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "folder-rest-controller"
+        ],
+        "summary": "deleteFolder",
+        "operationId": "deleteFolderUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/model-photos": {
+      "get": {
+        "tags": [
+          "model-photo-rest-controller"
+        ],
+        "summary": "getModelPhotos",
+        "operationId": "getModelPhotosUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«ModelPhotoForListDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "model-photo-rest-controller"
+        ],
+        "summary": "createModelPhoto",
+        "operationId": "createModelPhotoUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "modelPhotoDto",
+            "description": "modelPhotoDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ModelPhotoDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/model-photos/{id}": {
+      "get": {
+        "tags": [
+          "model-photo-rest-controller"
+        ],
+        "summary": "getModelPhoto",
+        "operationId": "getModelPhotoUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ModelPhotoViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "model-photo-rest-controller"
+        ],
+        "summary": "updateModelPhoto",
+        "operationId": "updateModelPhotoUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "modelPhotoDto",
+            "description": "modelPhotoDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ModelPhotoDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "model-photo-rest-controller"
+        ],
+        "summary": "deleteModelPhoto",
+        "operationId": "deleteModelPhotoUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/placement-positions": {
+      "get": {
+        "tags": [
+          "placement-position-controller"
+        ],
+        "summary": "getPlacementPositions",
+        "operationId": "getPlacementPositionsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«PlacementPositionViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "placement-position-controller"
+        ],
+        "summary": "createPlacementPosition",
+        "operationId": "createPlacementPositionUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "placementPositionDto",
+            "description": "placementPositionDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PlacementPositionDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/placement-positions/{id}": {
+      "get": {
+        "tags": [
+          "placement-position-controller"
+        ],
+        "summary": "getPlacementPosition",
+        "operationId": "getPlacementPositionUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PlacementPositionViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "placement-position-controller"
+        ],
+        "summary": "updatePlacementPosition",
+        "operationId": "updatePlacementPositionUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "placementPositionDto",
+            "description": "placementPositionDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PlacementPositionDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "placement-position-controller"
+        ],
+        "summary": "deletePlacementPosition",
+        "operationId": "deletePlacementPositionUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/posts": {
+      "get": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "getPosts",
+        "operationId": "getPostsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«PostViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "createPost",
+        "operationId": "createPostUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "postDto",
+            "description": "postDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/posts/{id}": {
+      "get": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "getPost",
+        "operationId": "getPostUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PostViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "likePost",
+        "operationId": "likePostUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "likeDto",
+            "description": "likeDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LikeDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "updatePost",
+        "operationId": "updatePostUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "postDto",
+            "description": "postDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "deletePost",
+        "operationId": "deletePostUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/posts/{id}/likes": {
+      "get": {
+        "tags": [
+          "post-rest-controller"
+        ],
+        "summary": "countLikesOfPost",
+        "operationId": "countLikesOfPostUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/tags": {
+      "get": {
+        "tags": [
+          "tag-rest-controller"
+        ],
+        "summary": "getTags",
+        "operationId": "getTagsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«TagViewDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tag-rest-controller"
+        ],
+        "summary": "createTag",
+        "operationId": "createTagUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tagDto",
+            "description": "tagDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TagDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/tags/{id}": {
+      "get": {
+        "tags": [
+          "tag-rest-controller"
+        ],
+        "summary": "getTag",
+        "operationId": "getTagUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TagViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "tag-rest-controller"
+        ],
+        "summary": "updateTag",
+        "operationId": "updateTagUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "tagDto",
+            "description": "tagDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TagDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tag-rest-controller"
+        ],
+        "summary": "deleteTag",
+        "operationId": "deleteTagUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": [
+          "user-rest-controller"
+        ],
+        "summary": "getUsers",
+        "operationId": "getUsersUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "allParams",
+            "in": "query",
+            "description": "allParams",
+            "required": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ViewListPage«UserForListDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user-rest-controller"
+        ],
+        "summary": "createUser",
+        "operationId": "createUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "userRegistrationDto",
+            "description": "userRegistrationDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRegistrationDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/register": {
+      "post": {
+        "tags": [
+          "user-rest-controller"
+        ],
+        "summary": "register",
+        "operationId": "registerUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "userRegistrationDto",
+            "description": "userRegistrationDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRegistrationDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "tags": [
+          "user-rest-controller"
+        ],
+        "summary": "getUser",
+        "operationId": "getUserUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserViewDto"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user-rest-controller"
+        ],
+        "summary": "updateUser",
+        "operationId": "updateUserUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "userDto",
+            "description": "userDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user-rest-controller"
+        ],
+        "summary": "deleteUser",
+        "operationId": "deleteUserUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CommentDto": {
+      "type": "object",
+      "required": [
+        "postId",
+        "text",
+        "userId"
+      ],
+      "properties": {
+        "postId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "text": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "CommentDto"
+    },
+    "CommentViewDto": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "userFirstName": {
+          "type": "string"
+        },
+        "userLastName": {
+          "type": "string"
+        }
+      },
+      "title": "CommentViewDto"
+    },
+    "DesignDto": {
+      "type": "object",
+      "required": [
+        "creatorDesignerId",
+        "name"
+      ],
+      "properties": {
+        "creatorDesignerId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "DesignDto"
+    },
+    "DesignViewDto": {
+      "type": "object",
+      "properties": {
+        "creatorDesignerFirstName": {
+          "type": "string"
+        },
+        "creatorDesignerLastName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "DesignViewDto"
+    },
+    "DesignerProfileDto": {
+      "type": "object",
+      "required": [
+        "base64StringImage",
+        "description",
+        "email",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "username"
+      ],
+      "properties": {
+        "base64StringImage": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "experiencedSince": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "lastName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 11,
+          "pattern": "^([0-9])+$"
+        },
+        "username": {
+          "type": "string",
+          "pattern": ".*([A-Z]|[a-z]|[А-Я]|[а-я]).*"
+        }
+      },
+      "title": "DesignerProfileDto"
+    },
+    "DesignerProfileRegistrationDto": {
+      "type": "object",
+      "required": [
+        "description",
+        "email",
+        "firstName",
+        "lastName",
+        "password",
+        "passwordConfirmation",
+        "phoneNumber",
+        "username"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "experiencedSince": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "lastName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirmation": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 11,
+          "pattern": "^([0-9])+$"
+        },
+        "username": {
+          "type": "string",
+          "pattern": ".*([A-Z]|[a-z]|[А-Я]|[а-я]).*"
+        }
+      },
+      "title": "DesignerProfileRegistrationDto"
+    },
+    "DesignerProfileViewDto": {
+      "type": "object",
+      "properties": {
+        "base64StringImage": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "experiencedSince": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "DesignerProfileViewDto"
+    },
+    "FolderDto": {
+      "type": "object",
+      "required": [
+        "creatorDesignerId",
+        "name"
+      ],
+      "properties": {
+        "creatorDesignerId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentFolderId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "FolderDto"
+    },
+    "FolderViewDto": {
+      "type": "object",
+      "properties": {
+        "creatorDesignerFirstName": {
+          "type": "string"
+        },
+        "creatorDesignerLastName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentFolderName": {
+          "type": "string"
+        }
+      },
+      "title": "FolderViewDto"
+    },
+    "LikeDto": {
+      "type": "object",
+      "required": [
+        "userId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "LikeDto"
+    },
+    "ModelPhotoDto": {
+      "type": "object",
+      "required": [
+        "base64StringFile",
+        "designId",
+        "placementPositionId"
+      ],
+      "properties": {
+        "base64StringFile": {
+          "type": "string"
+        },
+        "designId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "placementPositionId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ModelPhotoDto"
+    },
+    "ModelPhotoForListDto": {
+      "type": "object",
+      "properties": {
+        "designName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "placementPositionHeightRelativeSize": {
+          "type": "number"
+        },
+        "placementPositionWidthRelativeSize": {
+          "type": "number"
+        }
+      },
+      "title": "ModelPhotoForListDto"
+    },
+    "ModelPhotoViewDto": {
+      "type": "object",
+      "properties": {
+        "base64StringFile": {
+          "type": "string"
+        },
+        "designName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "placementPositionHeightRelativeSize": {
+          "type": "number"
+        },
+        "placementPositionWidthRelativeSize": {
+          "type": "number"
+        }
+      },
+      "title": "ModelPhotoViewDto"
+    },
+    "PlacementPositionDto": {
+      "type": "object",
+      "required": [
+        "anchor",
+        "bottomMarginPosition",
+        "heightRelativeSize",
+        "leftMarginPosition",
+        "name",
+        "rightMarginPosition",
+        "topMarginPosition",
+        "widthRelativeSize"
+      ],
+      "properties": {
+        "anchor": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "maximum": 16,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "bottomMarginPosition": {
+          "type": "number"
+        },
+        "heightRelativeSize": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "leftMarginPosition": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rightMarginPosition": {
+          "type": "number"
+        },
+        "topMarginPosition": {
+          "type": "number"
+        },
+        "widthRelativeSize": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        }
+      },
+      "title": "PlacementPositionDto"
+    },
+    "PlacementPositionViewDto": {
+      "type": "object",
+      "properties": {
+        "anchor": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bottomMarginPosition": {
+          "type": "number"
+        },
+        "heightRelativeSize": {
+          "type": "number"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "leftMarginPosition": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rightMarginPosition": {
+          "type": "number"
+        },
+        "topMarginPosition": {
+          "type": "number"
+        },
+        "widthRelativeSize": {
+          "type": "number"
+        }
+      },
+      "title": "PlacementPositionViewDto"
+    },
+    "PostDto": {
+      "type": "object",
+      "required": [
+        "description",
+        "designId",
+        "designerId"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "designId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "designerId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "PostDto"
+    },
+    "PostViewDto": {
+      "type": "object",
+      "properties": {
+        "creationDatetime": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "designBase64StringFile": {
+          "type": "string"
+        },
+        "designName": {
+          "type": "string"
+        },
+        "designerFirstName": {
+          "type": "string"
+        },
+        "designerLastName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "PostViewDto"
+    },
+    "TagDto": {
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "TagDto"
+    },
+    "TagViewDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "TagViewDto"
+    },
+    "UserDto": {
+      "type": "object",
+      "required": [
+        "base64StringImage",
+        "email",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "roleId",
+        "username"
+      ],
+      "properties": {
+        "base64StringImage": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "lastName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 11,
+          "pattern": "^([0-9])+$"
+        },
+        "roleId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "username": {
+          "type": "string",
+          "pattern": ".*([A-Z]|[a-z]|[А-Я]|[а-я]).*"
+        }
+      },
+      "title": "UserDto"
+    },
+    "UserForListDto": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "UserForListDto"
+    },
+    "UserRegistrationDto": {
+      "type": "object",
+      "required": [
+        "email",
+        "firstName",
+        "lastName",
+        "password",
+        "passwordConfirmation",
+        "phoneNumber",
+        "roleId",
+        "username"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "lastName": {
+          "type": "string",
+          "pattern": "^([A-Z]|[a-z]|[А-Я]|[а-я])+$"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirmation": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 11,
+          "pattern": "^([0-9])+$"
+        },
+        "roleId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "username": {
+          "type": "string",
+          "pattern": ".*([A-Z]|[a-z]|[А-Я]|[а-я]).*"
+        }
+      },
+      "title": "UserRegistrationDto"
+    },
+    "UserViewDto": {
+      "type": "object",
+      "properties": {
+        "base64StringImage": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "UserViewDto"
+    },
+    "ViewListPage«CommentViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«CommentViewDto»"
+    },
+    "ViewListPage«DesignViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DesignViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«DesignViewDto»"
+    },
+    "ViewListPage«DesignerProfileViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DesignerProfileViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«DesignerProfileViewDto»"
+    },
+    "ViewListPage«FolderViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FolderViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«FolderViewDto»"
+    },
+    "ViewListPage«ModelPhotoForListDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelPhotoForListDto"
+          }
+        }
+      },
+      "title": "ViewListPage«ModelPhotoForListDto»"
+    },
+    "ViewListPage«PlacementPositionViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlacementPositionViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«PlacementPositionViewDto»"
+    },
+    "ViewListPage«PostViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«PostViewDto»"
+    },
+    "ViewListPage«TagViewDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TagViewDto"
+          }
+        }
+      },
+      "title": "ViewListPage«TagViewDto»"
+    },
+    "ViewListPage«UserForListDto»": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "viewDtoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserForListDto"
+          }
+        }
+      },
+      "title": "ViewListPage«UserForListDto»"
+    }
+  }
+}

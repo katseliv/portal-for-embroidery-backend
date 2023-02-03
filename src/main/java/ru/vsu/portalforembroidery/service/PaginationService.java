@@ -12,6 +12,7 @@ public interface PaginationService<T> {
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
                 .totalPages(totalPages)
+                .totalCount((int) totalAmount)
                 .viewDtoList(userViewDtoList)
                 .build();
     }

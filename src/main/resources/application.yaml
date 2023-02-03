@@ -1,32 +1,3 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /
 spring:
-  datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
-  liquibase:
-    change-log: classpath:db.migration.v1/changelog.yaml
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-    properties:
-      hibernate:
-        default_schema: embroidery
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
-  servlet:
-    multipart:
-      enabled: true
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
-    pathmatch:
-      matching-strategy: ant-path-matcher
-logging:
-  level:
-    org.springframework.web: DEBUG
+  profiles:
+    active: local
