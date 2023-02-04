@@ -11,6 +11,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.CommentMapper;
 import ru.vsu.portalforembroidery.model.dto.CommentDto;
+import ru.vsu.portalforembroidery.model.dto.CommentUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.CommentEntity;
@@ -69,13 +70,12 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
 
     @Override
     @Transactional
-    public void updateCommentById(int id, CommentDto commentDto) {
-        checkExistingOfPostAndUser(commentDto);
+    public void updateCommentById(int id, CommentUpdateDto commentUpdateDto) {
         final Optional<CommentEntity> commentEntity = commentRepository.findById(id);
         commentEntity.ifPresentOrElse(
                 (comment) -> {
                     log.info("Comment with id = {} has been found.", comment.getId());
-                    commentMapper.mergeCommentEntityAndCommentDto(comment, commentDto);
+                    commentMapper.mergeCommentEntityAndCommentUpdateDto(comment, commentUpdateDto);
                     commentRepository.save(comment);
                 },
                 () -> {

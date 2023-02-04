@@ -2,6 +2,7 @@ package ru.vsu.portalforembroidery.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.CommentDto;
+import ru.vsu.portalforembroidery.model.dto.CommentUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 
@@ -13,7 +14,7 @@ public interface CommentService {
 
     CommentViewDto getCommentViewById(int id);
 
-    void updateCommentById(int id, CommentDto commentDto);
+    void updateCommentById(int id, CommentUpdateDto commentUpdateDto);
 
     void deleteCommentById(int id);
 

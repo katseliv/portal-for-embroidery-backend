@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import ru.vsu.portalforembroidery.model.dto.CommentDto;
+import ru.vsu.portalforembroidery.model.dto.CommentUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.entity.CommentEntity;
 
@@ -38,7 +39,7 @@ public interface CommentMapper {
     @Mapping(target = "user.lastName", source = "userLastName")
     CommentEntity commentViewDtoToCommentEntity(CommentViewDto dto);
 
-    void mergeCommentEntityAndCommentDto(@MappingTarget CommentEntity entity, CommentDto dto);
+    void mergeCommentEntityAndCommentUpdateDto(@MappingTarget CommentEntity entity, CommentUpdateDto dto);
 
     List<CommentViewDto> commentEntitiesToCommentViewDtoList(Iterable<CommentEntity> entities);
 

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.CommentDto;
+import ru.vsu.portalforembroidery.model.dto.CommentUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.service.CommentService;
@@ -31,8 +32,8 @@ public class CommentRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateComment(@PathVariable final int id, @RequestBody @Valid final CommentDto commentDto) {
-        commentService.updateCommentById(id, commentDto);
+    public ResponseEntity<String> updateComment(@PathVariable final int id, @RequestBody @Valid final CommentUpdateDto commentUpdateDto) {
+        commentService.updateCommentById(id, commentUpdateDto);
         return new ResponseEntity<>("Comment was updated!", HttpStatus.OK);
     }
 
