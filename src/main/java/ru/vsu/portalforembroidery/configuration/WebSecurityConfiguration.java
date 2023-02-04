@@ -18,7 +18,6 @@ import ru.vsu.portalforembroidery.mapper.UserMapper;
 import ru.vsu.portalforembroidery.repository.UserRepository;
 import ru.vsu.portalforembroidery.service.UserDetailsServiceImpl;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
