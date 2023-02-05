@@ -25,12 +25,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public LoginResponse login(final UserDetailsDto userDetailsDto) {
+        final Integer id = userDetailsDto.getId();
         final String email = userDetailsDto.getEmail();
         if (jwtTokenService.existsByUserEmail(email)) {
             final String accessToken = jwtTokenService.getJwtTokenByEmailAndType(email, JwtTokenType.ACCESS);
             final String refreshToken = jwtTokenService.getJwtTokenByEmailAndType(email, JwtTokenType.REFRESH);
             log.info("User with email = {} has been logged in with pre-existing tokens.", email);
-            return new LoginResponse(accessToken, refreshToken);
+            return new LoginResponse(id, accessToken, refreshToken);
         }
 
         final String accessToken = jwtTokenProvider.generateAccessToken(userDetailsDto);
@@ -50,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         jwtTokenService.createJwtToken(jwtAccessTokenDto);
         jwtTokenService.createJwtToken(jwtRefreshTokenDto);
         log.info("User with email = {} has been logged in with new tokens.", email);
-        return new LoginResponse(accessToken, refreshToken);
+        return new LoginResponse(id, accessToken, refreshToken);
     }
 
     @Override

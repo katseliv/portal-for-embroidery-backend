@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class LoginResponse {
 
+    private final Integer id;
     private final String accessToken;
     private final String refreshToken;
 
