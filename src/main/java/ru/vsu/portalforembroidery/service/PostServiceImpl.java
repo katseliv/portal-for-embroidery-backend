@@ -13,6 +13,7 @@ import ru.vsu.portalforembroidery.mapper.PostMapper;
 import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.*;
@@ -36,6 +37,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     @Value("${pagination.defaultPageSize}")
     private int defaultPageSize;
 
+    private final CommentService commentService;
     private final UserRepository userRepository;
     private final DesignRepository designRepository;
     private final LikeRepository likeRepository;
@@ -180,6 +182,12 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
         final int totalAmount = numberOfPosts();
 
         return getViewListPage(totalAmount, pageSize, pageNumber, listPosts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ViewListPage<CommentViewDto> getViewListPageOfComments(int id, String page, String size) {
+        return commentService.getViewListPage(id, page, size);
     }
 
     @Override

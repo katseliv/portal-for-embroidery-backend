@@ -3,6 +3,7 @@ package ru.vsu.portalforembroidery.service;
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 
@@ -23,6 +24,8 @@ public interface PostService {
     int countLikes(int id);
 
     ViewListPage<PostViewDto> getViewListPage(String page, String size);
+
+    ViewListPage<CommentViewDto> getViewListPageOfComments(int id, String page, String size);
 
     List<PostViewDto> listPosts(Pageable pageable);
 

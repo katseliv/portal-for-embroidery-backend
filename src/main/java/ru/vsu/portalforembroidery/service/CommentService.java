@@ -20,8 +20,14 @@ public interface CommentService {
 
     ViewListPage<CommentViewDto> getViewListPage(String page, String size);
 
+    ViewListPage<CommentViewDto> getViewListPage(int postId, String page, String size);
+
     List<CommentViewDto> listComments(Pageable pageable);
 
+    List<CommentViewDto> listCommentsByPost(int postId, Pageable pageable);
+
     int numberOfComments();
+
+    int numberOfCommentsByPost(int postId);
 
 }

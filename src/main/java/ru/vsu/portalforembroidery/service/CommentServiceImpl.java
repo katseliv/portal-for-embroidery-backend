@@ -133,6 +133,19 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
 
     @Override
     @Transactional(readOnly = true)
+    public ViewListPage<CommentViewDto> getViewListPage(int postId, String page, String size) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        final List<CommentViewDto> listCommentsByPost = listCommentsByPost(postId, pageable);
+        final int totalAmount = numberOfCommentsByPost(postId);
+
+        return getViewListPage(totalAmount, pageSize, pageNumber, listCommentsByPost);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<CommentViewDto> listComments(Pageable pageable) {
         final List<CommentEntity> commentEntities = commentRepository.findAll(pageable).getContent();
         log.info("There have been found {} comments.", commentEntities.size());
@@ -140,9 +153,24 @@ public class CommentServiceImpl implements CommentService, PaginationService<Com
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<CommentViewDto> listCommentsByPost(int postId, Pageable pageable) {
+        final List<CommentEntity> commentEntities = commentRepository.findAllByPostId(postId, pageable).getContent();
+        log.info("There have been found {} comments by post.", commentEntities.size());
+        return commentMapper.commentEntitiesToCommentViewDtoList(commentEntities);
+    }
+
+    @Override
     public int numberOfComments() {
         final long numberOfComments = commentRepository.count();
         log.info("There have been found {} comments.", numberOfComments);
+        return (int) numberOfComments;
+    }
+
+    @Override
+    public int numberOfCommentsByPost(int postId) {
+        final long numberOfComments = commentRepository.countByPostId(postId);
+        log.info("There have been found {} comments by post.", numberOfComments);
         return (int) numberOfComments;
     }
 

@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.service.CommentService;
 import ru.vsu.portalforembroidery.service.PostService;
 
 import javax.validation.Valid;
@@ -55,6 +57,12 @@ public class PostRestController {
     @GetMapping
     public ViewListPage<PostViewDto> getPosts(@RequestParam(required = false) final Map<String, String> allParams) {
         return postService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    }
+
+    @GetMapping("/{id}/comments")
+    public ViewListPage<CommentViewDto> getCommentsPost(@PathVariable final int id,
+                                                        @RequestParam(required = false) final Map<String, String> allParams) {
+        return postService.getViewListPageOfComments(id, allParams.get("page"), allParams.get("size"));
     }
 
 }
