@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-//@Where(clause = "is_deleted = false")
+@Where(clause = "is_deleted = false")
 @Entity(name = "likes")
 @Table(name = "likes")
 public class LikeEntity {

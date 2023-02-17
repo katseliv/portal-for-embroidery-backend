@@ -30,6 +30,15 @@ public class DesignEntity {
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
+            name = "designs_files",
+            joinColumns = {@JoinColumn(name = "design_id")},
+            inverseJoinColumns = {@JoinColumn(name = "file_id")}
+    )
+    @ToString.Exclude
+    private List<FileEntity> files = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
             name = "designs_tags",
             joinColumns = {@JoinColumn(name = "design_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
+import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
-import ru.vsu.portalforembroidery.service.CommentService;
 import ru.vsu.portalforembroidery.service.PostService;
 
 import javax.validation.Valid;
@@ -44,9 +44,14 @@ public class PostRestController {
         postService.deletePostById(id);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/like")
     public void likePost(@PathVariable final int id, @RequestBody @Valid final LikeDto likeDto) {
         postService.likePostById(id, likeDto);
+    }
+
+    @PostMapping("/{id}/dislike")
+    public void dislikePost(@PathVariable final int id, @RequestBody @Valid final LikeDto likeDto) {
+        postService.dislikePostById(id, likeDto);
     }
 
     @GetMapping("/{id}/likes")
@@ -55,7 +60,7 @@ public class PostRestController {
     }
 
     @GetMapping
-    public ViewListPage<PostViewDto> getPosts(@RequestParam(required = false) final Map<String, String> allParams) {
+    public ViewListPage<PostForListDto> getPosts(@RequestParam(required = false) final Map<String, String> allParams) {
         return postService.getViewListPage(allParams.get("page"), allParams.get("size"));
     }
 

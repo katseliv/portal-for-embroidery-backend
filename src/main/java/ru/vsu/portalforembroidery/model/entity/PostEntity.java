@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,5 +35,10 @@ public class PostEntity {
 
     @Column(name = "creation_datetime")
     private LocalDateTime creationDatetime;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "post_id")
+    @ToString.Exclude
+    private List<LikeEntity> likes = new ArrayList<>();
 
 }

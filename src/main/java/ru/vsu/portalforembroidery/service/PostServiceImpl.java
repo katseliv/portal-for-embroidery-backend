@@ -14,6 +14,7 @@ import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
+import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.*;
@@ -30,7 +31,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PostServiceImpl implements PostService, PaginationService<PostViewDto> {
+public class PostServiceImpl implements PostService, PaginationService<PostForListDto> {
 
     @Value("${pagination.defaultPageNumber}")
     private int defaultPageNumber;
@@ -64,11 +65,13 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     @Transactional(readOnly = true)
     public PostViewDto getPostViewById(int id) {
         final Optional<PostEntity> postEntity = postRepository.findById(id);
-        postEntity.ifPresentOrElse(
-                (post) -> log.info("Post with id = {} has been found.", post.getId()),
-                () -> log.warn("Post hasn't been found."));
-        return postEntity.map(postMapper::postEntityToPostViewDto)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found!"));
+        if (postEntity.isEmpty()) {
+            log.warn("Post hasn't been found.");
+            throw new EntityNotFoundException("Post not found!");
+        }
+        PostEntity post = postEntity.get();
+        log.info("Post with id = {} has been found.", post.getId());
+        return postMapper.postEntityToPostViewDto(post);
     }
 
     @Override
@@ -130,6 +133,44 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
     @Override
     @Transactional
     public void likePostById(int id, LikeDto likeDto) {
+        checkExistingOfPostAndUserEntities(id, likeDto);
+        final LikeId likeId = LikeId.builder().postId(id).userId(likeDto.getUserId()).build();
+        final Optional<LikeEntity> likeEntityOptional = likeRepository.findById(likeId);
+        likeEntityOptional.ifPresentOrElse(
+                (like) -> {
+                    log.info("Like with userId = {} и postId = {} has been found.", like.getId().getUserId(), like.getId().getPostId());
+                    likeRepository.markAsNotDeletedById(likeId);
+                    log.info("Like with userId = {} и postId = {} has been recovered.", likeId.getUserId(), likeId.getPostId());
+                },
+                () -> {
+                    log.warn("Like hasn't been found.");
+                    final LikeEntity likeEntity = LikeEntity.builder().id(likeId).build();
+                    likeRepository.save(likeEntity);
+                }
+        );
+    }
+
+    @Override
+    @Transactional
+    public void dislikePostById(int id, LikeDto likeDto) {
+        checkExistingOfPostAndUserEntities(id, likeDto);
+        final LikeId likeId = LikeId.builder().postId(id).userId(likeDto.getUserId()).build();
+        final Optional<LikeEntity> likeEntityOptional = likeRepository.findById(likeId);
+        likeEntityOptional.ifPresentOrElse(
+                (like) -> {
+                    log.info("Like with userId = {} и postId = {} has been found.", like.getId().getUserId(), like.getId().getPostId());
+                    likeRepository.markAsDeletedById(likeId);
+                    log.info("Like with userId = {} и postId = {} has been deleted.", likeId.getUserId(), likeId.getPostId());
+                },
+                () -> {
+                    log.warn("Like hasn't been found.");
+                    final LikeEntity likeEntity = LikeEntity.builder().id(likeId).deleted(true).build();
+                    likeRepository.save(likeEntity);
+                }
+        );
+    }
+
+    private void checkExistingOfPostAndUserEntities(int id, LikeDto likeDto) {
         final Optional<PostEntity> postEntity = postRepository.findById(id);
         postEntity.ifPresentOrElse(
                 (post) -> log.info("Post with id = {} has been found.", post.getId()),
@@ -145,24 +186,6 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
                     throw new EntityNotFoundException("User not found!");
                 }
         );
-        final LikeId likeId = LikeId.builder().postId(id).userId(likeDto.getUserId()).build();
-        final Optional<LikeEntity> likeEntityOptional = likeRepository.findById(likeId);
-        likeEntityOptional.ifPresentOrElse(
-                (like) -> {
-                    log.info("Like with userId = {} и postId = {} has been found.", like.getId().getUserId(), like.getId().getPostId());
-                    if (like.isDeleted()) {
-                        likeRepository.markAsNotDeletedById(likeId);
-                        log.info("Like with userId = {} и postId = {} has been recovered.", likeId.getUserId(), likeId.getPostId());
-                    } else {
-                        likeRepository.markAsDeletedById(likeId);
-                        log.info("Like with userId = {} и postId = {} has been deleted.", likeId.getUserId(), likeId.getPostId());
-                    }
-                },
-                () -> {
-                    log.warn("Like hasn't been found.");
-                    final LikeEntity likeEntity = LikeEntity.builder().id(likeId).build();
-                    likeRepository.save(likeEntity);
-                });
     }
 
     @Override
@@ -173,12 +196,12 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<PostViewDto> getViewListPage(String page, String size) {
+    public ViewListPage<PostForListDto> getViewListPage(String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
 
         final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        final List<PostViewDto> listPosts = listPosts(pageable);
+        final List<PostForListDto> listPosts = listPosts(pageable);
         final int totalAmount = numberOfPosts();
 
         return getViewListPage(totalAmount, pageSize, pageNumber, listPosts);
@@ -192,7 +215,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostViewD
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostViewDto> listPosts(Pageable pageable) {
+    public List<PostForListDto> listPosts(Pageable pageable) {
         final List<PostEntity> postEntities = postRepository.findAll(pageable).getContent();
         log.info("There have been found {} posts.", postEntities.size());
         return postMapper.postEntitiesToPostViewDtoList(postEntities);
