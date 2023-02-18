@@ -18,7 +18,11 @@ public interface LikeRepository extends JpaRepository<LikeEntity, LikeId> {
     @Query("UPDATE likes SET deleted = FALSE WHERE id = ?1")
     void markAsNotDeletedById(LikeId id);
 
-    @Query("SELECT COUNT(*) FROM likes WHERE deleted = FALSE")
+    @Modifying
+    @Query("DELETE FROM likes WHERE post_id = ?1")
+    void deleteAllByPostId(int postId);
+
+    @Query("SELECT COUNT(*) FROM likes WHERE post_id = ?1 AND deleted = FALSE")
     int countByPostId(int postId);
 
 }

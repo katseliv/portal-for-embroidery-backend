@@ -126,6 +126,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
                     log.warn("Post hasn't been found.");
                     throw new EntityNotFoundException("Post not found!");
                 });
+        likeRepository.deleteAllByPostId(id);
         postRepository.deleteById(id);
         log.info("Post with id = {} has been deleted.", id);
     }
