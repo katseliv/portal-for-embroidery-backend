@@ -19,6 +19,12 @@ public class FileEntity {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "extension")
+    private String extension;
+
     @Column(name = "file")
     private byte[] file;
 

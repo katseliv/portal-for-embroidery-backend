@@ -6,11 +6,13 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
 import ru.vsu.portalforembroidery.model.entity.FileEntity;
 import ru.vsu.portalforembroidery.model.entity.LikeEntity;
 import ru.vsu.portalforembroidery.model.entity.PostEntity;
+import ru.vsu.portalforembroidery.model.entity.TagEntity;
 
 import java.util.Base64;
 import java.util.List;
@@ -25,7 +27,8 @@ public interface PostMapper {
     @Mapping(target = "designerFirstName", source = "designer.firstName")
     @Mapping(target = "designerLastName", source = "designer.lastName")
     @Mapping(target = "designName", source = "design.name")
-    @Mapping(target = "designBase64StringImages", source = "design.files", qualifiedByName = "listOfFilesToListOfStrings")
+    @Mapping(target = "files", source = "design.files", qualifiedByName = "listOfFilesToListOfStrings")
+    @Mapping(target = "tags", source = "design.tags", qualifiedByName = "listOfTagsToListOfStrings")
     @Mapping(target = "countLikes", source = "likes", qualifiedByName = "listOfLikesToCountLikes")
     PostViewDto postEntityToPostViewDto(PostEntity entity);
 
@@ -35,8 +38,18 @@ public interface PostMapper {
     PostForListDto postEntityToPostForListDto(PostEntity entity);
 
     @Named(value = "listOfFilesToListOfStrings")
-    default List<String> mapListOfFilesToListOfStrings(List<FileEntity> files) {
-        return files.stream().map(fileEntity -> Base64.getEncoder().encodeToString(fileEntity.getFile())).toList();
+    default List<FileViewDto> mapListOfFilesToListOfStrings(List<FileEntity> files) {
+        return files.stream().map(fileEntity -> {
+            String name = fileEntity.getName();
+            String extension = fileEntity.getExtension();
+            String base64StringFile = Base64.getEncoder().encodeToString(fileEntity.getFile());
+            return FileViewDto.builder().name(name).extension(extension).base64StringFile(base64StringFile).build();
+        }).toList();
+    }
+
+    @Named(value = "listOfTagsToListOfStrings")
+    default List<String> mapListOfTagsToListOfStrings(List<TagEntity> tags) {
+        return tags.stream().map(TagEntity::getTitle).toList();
     }
 
     @Named(value = "listOfLikesToCountLikes")

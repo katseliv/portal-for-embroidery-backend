@@ -10,3 +10,19 @@ databaseChangeLog:
         - sqlFile:
             path: PFE-001-202211082110.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: PFE-001-202302181215
+      author: EkaterinaSelivanova
+      comment: Add New Column To Files Table
+      changes:
+        - sqlFile:
+            path: PFE-001-202302181215.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: PFE-001-202302181425
+      author: EkaterinaSelivanova
+      comment: Add New Column To Files Table
+      changes:
+        - sqlFile:
+            path: PFE-001-202302181425.sql
+            relativeToChangelogFile: true

@@ -15,6 +15,9 @@ import javax.validation.constraints.Positive;
 @JsonDeserialize(builder = FileDto.FileDtoBuilder.class)
 public class FileDto {
 
+    @NotNull(message = "File Name is null.")
+    private final String name;
+
     @NotNull(message = "File is null.")
     private final String base64StringFile;
 

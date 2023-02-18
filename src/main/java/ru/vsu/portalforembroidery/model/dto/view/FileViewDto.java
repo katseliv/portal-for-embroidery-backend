@@ -10,6 +10,8 @@ import lombok.*;
 public class FileViewDto {
 
     private final Integer id;
+    private final String name;
+    private final String extension;
     private final String base64StringFile;
     private final String folderName;
 

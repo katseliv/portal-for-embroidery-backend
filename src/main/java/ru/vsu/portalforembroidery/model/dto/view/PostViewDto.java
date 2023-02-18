@@ -15,8 +15,9 @@ public class PostViewDto {
     private final String designerFirstName;
     private final String designerLastName;
     private final String designName;
-    private final List<String> designBase64StringImages;
     private final String description;
+    private final List<FileViewDto> files;
+    private final List<String> tags;
     private final String creationDatetime;
     private final Integer countLikes;
 
