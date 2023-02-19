@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
@@ -73,7 +74,7 @@ public interface PostMapper {
     @Mapping(target = "design.name", source = "designName")
     PostEntity postViewDtoToPostEntity(PostViewDto dto);
 
-    void mergePostEntityAndPostDto(@MappingTarget PostEntity entity, PostDto dto);
+    void mergePostEntityAndPostUpdateDto(@MappingTarget PostEntity entity, PostUpdateDto dto);
 
     List<PostForListDto> postEntitiesToPostViewDtoList(Iterable<PostEntity> entities);
 

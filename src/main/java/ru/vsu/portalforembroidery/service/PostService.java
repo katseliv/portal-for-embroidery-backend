@@ -3,6 +3,7 @@ package ru.vsu.portalforembroidery.service;
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
@@ -16,7 +17,7 @@ public interface PostService {
 
     PostViewDto getPostViewById(int id);
 
-    void updatePostById(int id, PostDto postDto);
+    void updatePostById(int id, PostUpdateDto postUpdateDto);
 
     void deletePostById(int id);
 

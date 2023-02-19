@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
@@ -34,8 +35,8 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePost(@PathVariable final int id, @RequestBody @Valid final PostDto postDto) {
-        postService.updatePostById(id, postDto);
+    public ResponseEntity<String> updatePost(@PathVariable final int id, @RequestBody @Valid final PostUpdateDto postUpdateDto) {
+        postService.updatePostById(id, postUpdateDto);
         return new ResponseEntity<>("Post was updated!", HttpStatus.OK);
     }
 

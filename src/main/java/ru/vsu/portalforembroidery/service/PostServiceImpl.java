@@ -13,6 +13,7 @@ import ru.vsu.portalforembroidery.mapper.PostMapper;
 import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
+import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
@@ -76,13 +77,12 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
 
     @Override
     @Transactional
-    public void updatePostById(int id, PostDto postDto) {
-        checkExistingOfDesignerAndDesign(postDto);
+    public void updatePostById(int id, PostUpdateDto postUpdateDto) {
         final Optional<PostEntity> postEntity = postRepository.findById(id);
         postEntity.ifPresentOrElse(
                 (post) -> {
                     log.info("Post with id = {} has been found.", post.getId());
-                    postMapper.mergePostEntityAndPostDto(post, postDto);
+                    postMapper.mergePostEntityAndPostUpdateDto(post, postUpdateDto);
                     postRepository.save(post);
                 },
                 () -> {
