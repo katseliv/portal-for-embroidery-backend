@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -16,12 +17,17 @@ import javax.validation.constraints.Positive;
 public class FileDto {
 
     @NotNull(message = "File Name is null.")
+    @NotBlank(message = "File Name is blank.")
     private final String name;
 
+    @NotNull(message = "File Extension is null.")
+    @NotBlank(message = "File Extension is blank.")
+    private final String extension;
+
     @NotNull(message = "File is null.")
+    @NotBlank(message = "File is blank.")
     private final String base64StringFile;
 
-    @NotNull(message = "Folder Id is null.")
     @Positive(message = "Folder Id is negative or zero.")
     private final Integer folderId;
 

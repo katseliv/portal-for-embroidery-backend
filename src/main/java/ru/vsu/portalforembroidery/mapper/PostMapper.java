@@ -67,6 +67,7 @@ public interface PostMapper {
 
     @Mapping(target = "designer.id", source = "designerId")
     @Mapping(target = "design.id", source = "designId")
+    @Mapping(target = "design.files", source = "files")
     PostEntity postDtoToPostEntity(PostDto dto);
 
     @Mapping(target = "designer.firstName", source = "designerFirstName")

@@ -7,6 +7,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Getter
 @Builder
@@ -27,6 +28,9 @@ public class PostDto {
     @NotNull(message = "Description is null.")
     @NotBlank(message = "Description is blank.")
     private final String description;
+
+    @NotNull(message = "Files is null.")
+    private final List<FileDto> files;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class PostDtoBuilder {
