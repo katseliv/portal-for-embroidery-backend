@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
+import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.service.FolderService;
@@ -44,6 +45,18 @@ public class FolderRestController {
     @GetMapping
     public ViewListPage<FolderViewDto> getFolders(@RequestParam(required = false) final Map<String, String> allParams) {
         return folderService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    }
+
+    @GetMapping("/{id}/folders")
+    public ViewListPage<FolderViewDto> getFoldersParentFolder(@PathVariable final int id,
+                                                              @RequestParam(required = false) final Map<String, String> allParams) {
+        return folderService.getViewListPageOfChildrenFolders(id, allParams.get("page"), allParams.get("size"));
+    }
+
+    @GetMapping("/{id}/files")
+    public ViewListPage<FileForListDto> getFilesFolder(@PathVariable final int id,
+                                                       @RequestParam(required = false) final Map<String, String> allParams) {
+        return folderService.getViewListPageOfFiles(id, allParams.get("page"), allParams.get("size"));
     }
 
 }

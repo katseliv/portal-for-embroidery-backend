@@ -123,6 +123,19 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
 
     @Override
     @Transactional(readOnly = true)
+    public ViewListPage<FileForListDto> getViewListPage(int folderId, String page, String size) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        final List<FileForListDto> listFiles = listFilesByFolder(folderId, pageable);
+        final int totalAmount = numberOfFilesByFolder(folderId);
+
+        return getViewListPage(totalAmount, pageSize, pageNumber, listFiles);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<FileForListDto> listFiles(Pageable pageable) {
         final List<FileEntity> fileEntities = fileRepository.findAll(pageable).getContent();
         log.info("There have been found {} files.", fileEntities.size());
@@ -130,8 +143,23 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<FileForListDto> listFilesByFolder(int folderId, Pageable pageable) {
+        final List<FileEntity> fileEntities = fileRepository.findAllByFolderId(folderId, pageable).getContent();
+        log.info("There have been found {} files.", fileEntities.size());
+        return fileMapper.fileEntitiesToFileForListDtoList(fileEntities);
+    }
+
+    @Override
     public int numberOfFiles() {
         final long numberOfFiles = fileRepository.count();
+        log.info("There have been found {} files.", numberOfFiles);
+        return (int) numberOfFiles;
+    }
+
+    @Override
+    public int numberOfFilesByFolder(int folderId) {
+        final long numberOfFiles = fileRepository.countByFolderId(folderId);
         log.info("There have been found {} files.", numberOfFiles);
         return (int) numberOfFiles;
     }

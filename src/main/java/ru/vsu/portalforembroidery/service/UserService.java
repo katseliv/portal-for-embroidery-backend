@@ -6,6 +6,7 @@ import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.dto.UserDetailsDto;
 import ru.vsu.portalforembroidery.model.dto.UserDto;
 import ru.vsu.portalforembroidery.model.dto.UserRegistrationDto;
+import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.UserForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.UserViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -33,6 +34,8 @@ public interface UserService {
     void deleteUserById(int id);
 
     ViewListPage<UserForListDto> getViewListPage(String page, String size);
+
+    ViewListPage<FolderViewDto> getViewListPageOfFolders(int id, String page, String size);
 
     List<UserForListDto> listDesigners(Pageable pageable);
 

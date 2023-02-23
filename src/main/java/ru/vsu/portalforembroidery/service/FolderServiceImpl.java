@@ -11,6 +11,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FolderMapper;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
+import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.DesignerProfileEntity;
@@ -32,6 +33,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     @Value("${pagination.defaultPageSize}")
     private int defaultPageSize;
 
+    private final FileService fileService;
     private final FolderRepository folderRepository;
     private final DesignerProfileRepository designerProfileRepository;
     private final FolderMapper folderMapper;
@@ -142,6 +144,41 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     @Override
     @Transactional(readOnly = true)
+    public ViewListPage<FolderViewDto> getViewListPage(int userId, String page, String size) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        final List<FolderViewDto> listFolders = listFoldersByUser(userId, pageable);
+        final int totalAmount = numberOfFoldersByUser(userId);
+
+        return getViewListPage(totalAmount, pageSize, pageNumber, listFolders);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ViewListPage<FolderViewDto> getViewListPageOfChildrenFolders(int folderId, String page, String size) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        Optional<FolderEntity> optionalFolderEntity = folderRepository.findById(folderId);
+        FolderEntity folderEntity = optionalFolderEntity.orElseThrow(() -> new EntityNotFoundException("Folder not found!"));
+        List<FolderEntity> children = folderEntity.getChildren().stream().toList();
+
+        final List<FolderViewDto> listFolders = folderMapper.folderEntitiesToFolderViewDtoList(children);
+        final int totalAmount = children.size();
+
+        return getViewListPage(totalAmount, pageSize, pageNumber, listFolders);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ViewListPage<FileForListDto> getViewListPageOfFiles(int id, String page, String size) {
+        return fileService.getViewListPage(id, page, size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<FolderViewDto> listFolders(Pageable pageable) {
         final List<FolderEntity> folderEntities = folderRepository.findAll(pageable).getContent();
         log.info("There have been found {} folders.", folderEntities.size());
@@ -149,8 +186,23 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<FolderViewDto> listFoldersByUser(int userId, Pageable pageable) {
+        final List<FolderEntity> folderEntities = folderRepository.findAllByCreatorDesignerIdAndParentFolderIdIsNull(userId, pageable).getContent();
+        log.info("There have been found {} folders.", folderEntities.size());
+        return folderMapper.folderEntitiesToFolderViewDtoList(folderEntities);
+    }
+
+    @Override
     public int numberOfFolders() {
         final long numberOfFolders = folderRepository.count();
+        log.info("There have been found {} folders.", numberOfFolders);
+        return (int) numberOfFolders;
+    }
+
+    @Override
+    public int numberOfFoldersByUser(int userId) {
+        final long numberOfFolders = folderRepository.countByCreatorDesignerId(userId);
         log.info("There have been found {} folders.", numberOfFolders);
         return (int) numberOfFolders;
     }

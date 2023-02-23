@@ -18,6 +18,7 @@ import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.UserDetailsDto;
 import ru.vsu.portalforembroidery.model.dto.UserDto;
 import ru.vsu.portalforembroidery.model.dto.UserRegistrationDto;
+import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.UserForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.UserViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
     @Value("${pagination.defaultPageSize}")
     private int defaultPageSize;
 
+    private final FolderService folderService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -177,6 +179,12 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
         final int totalAmount = numberOfUsers();
 
         return getViewListPage(totalAmount, pageSize, pageNumber, listUsers);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ViewListPage<FolderViewDto> getViewListPageOfFolders(int id, String page, String size) {
+        return folderService.getViewListPage(id, page, size);
     }
 
     @Override

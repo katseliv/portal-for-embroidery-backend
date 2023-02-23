@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.dto.UserDto;
 import ru.vsu.portalforembroidery.model.dto.UserRegistrationDto;
+import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.UserForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.UserViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -53,6 +54,12 @@ public class UserRestController {
     @GetMapping
     public ViewListPage<UserForListDto> getUsers(@RequestParam(required = false) final Map<String, String> allParams) {
         return userService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    }
+
+    @GetMapping("/{id}/folders")
+    public ViewListPage<FolderViewDto> getFoldersUser(@PathVariable final int id,
+                                                      @RequestParam(required = false) final Map<String, String> allParams) {
+        return userService.getViewListPageOfFolders(id, allParams.get("page"), allParams.get("size"));
     }
 
 }
