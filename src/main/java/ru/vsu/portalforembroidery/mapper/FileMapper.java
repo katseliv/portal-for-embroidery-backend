@@ -2,8 +2,10 @@ package ru.vsu.portalforembroidery.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import ru.vsu.portalforembroidery.model.dto.FileDto;
+import ru.vsu.portalforembroidery.model.dto.FileUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.entity.FileEntity;
@@ -30,6 +32,8 @@ public interface FileMapper {
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
     FileEntity fileDtoToFileEntity(FileDto dto);
 
+    FileEntity fileUpdateDtoToFileEntity(FileUpdateDto dto);
+
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
     FileEntity fileViewDtoToFileEntity(FileViewDto dto);
 
@@ -40,6 +44,8 @@ public interface FileMapper {
 
     @Mapping(target = "folderName", source = "folder.name")
     FileForListDto fileEntityToFileForListDto(FileEntity entity);
+
+    void mergeFileEntityAndFileUpdateDto(@MappingTarget FileEntity entity, FileUpdateDto dto);
 
     @Mapping(target = "folderName", source = "folder.name")
     List<FileForListDto> fileEntitiesToFileForListDtoList(Iterable<FileEntity> entities);

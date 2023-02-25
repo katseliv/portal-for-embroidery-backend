@@ -2,6 +2,7 @@ package ru.vsu.portalforembroidery.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
+import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -14,7 +15,7 @@ public interface FolderService {
 
     FolderViewDto getFolderViewById(int id);
 
-    void updateFolderById(int id, FolderDto folderDto);
+    void updateFolderById(int id, FolderUpdateDto folderUpdateDto);
 
     void deleteFolderById(int id);
 

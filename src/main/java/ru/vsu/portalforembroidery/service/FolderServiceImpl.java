@@ -11,6 +11,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FolderMapper;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
+import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -68,22 +69,17 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     @Override
     @Transactional
-    public void updateFolderById(int id, FolderDto folderDto) {
-        checkExistingDesignerProfile(folderDto);
-        final FolderEntity parentFolderEntity = getParentFolder(folderDto);
+    public void updateFolderById(int id, FolderUpdateDto folderUpdateDto) {
         final Optional<FolderEntity> folderEntity = folderRepository.findById(id);
         folderEntity.ifPresentOrElse(
-                (folder) -> log.info("Folder with id = {} has been found.", folder.getId()),
+                (folder) -> {
+                    log.info("Folder with id = {} has been found.", folder.getId());
+                    folderMapper.mergeFolderEntityAndFolderUpdateDto(folder, folderUpdateDto);
+                    folderRepository.save(folder);
+                },
                 () -> {
                     log.warn("Folder hasn't been found.");
                     throw new EntityNotFoundException("Folder not found!");
-                });
-        Optional.of(folderDto)
-                .map(folderMapper::folderDtoToFolderEntity)
-                .map((folder) -> {
-                    folder.setId(id);
-                    folder.setParentFolder(parentFolderEntity);
-                    return folderRepository.save(folder);
                 });
         log.info("Folder with id = {} has been updated.", id);
     }

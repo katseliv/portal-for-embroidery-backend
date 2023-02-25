@@ -2,6 +2,7 @@ package ru.vsu.portalforembroidery.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.FileDto;
+import ru.vsu.portalforembroidery.model.dto.FileUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -14,7 +15,7 @@ public interface FileService {
 
     FileViewDto getFileViewById(int id);
 
-    void updateFileById(int id, FileDto fileDto);
+    void updateFileById(int id, FileUpdateDto fileUpdateDto);
 
     void deleteFileById(int id);
 

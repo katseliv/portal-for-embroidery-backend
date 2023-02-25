@@ -2,7 +2,9 @@ package ru.vsu.portalforembroidery.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
+import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.entity.FolderEntity;
 
@@ -24,10 +26,14 @@ public interface FolderMapper {
     @Mapping(target = "creatorDesigner.id", source = "creatorDesignerId")
     FolderEntity folderDtoToFolderEntity(FolderDto dto);
 
+    FolderEntity folderUpdateDtoToFolderEntity(FolderUpdateDto dto);
+
     @Mapping(target = "parentFolder.name", source = "parentFolderName")
     @Mapping(target = "creatorDesigner.firstName", source = "creatorDesignerFirstName")
     @Mapping(target = "creatorDesigner.lastName", source = "creatorDesignerLastName")
     FolderEntity folderViewDtoToFolderEntity(FolderViewDto dto);
+
+    void mergeFolderEntityAndFolderUpdateDto(@MappingTarget FolderEntity entity, FolderUpdateDto dto);
 
     List<FolderViewDto> folderEntitiesToFolderViewDtoList(Iterable<FolderEntity> entities);
 

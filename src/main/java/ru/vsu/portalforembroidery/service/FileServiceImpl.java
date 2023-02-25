@@ -11,6 +11,7 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FileMapper;
 import ru.vsu.portalforembroidery.model.dto.FileDto;
+import ru.vsu.portalforembroidery.model.dto.FileUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -69,27 +70,17 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
 
     @Override
     @Transactional
-    public void updateFileById(int id, FileDto fileDto) {
-        final Optional<FolderEntity> folderEntity = folderRepository.findById(fileDto.getFolderId());
-        folderEntity.ifPresentOrElse(
-                (user) -> log.info("Folder has been found."),
-                () -> {
-                    log.warn("Folder hasn't been found.");
-                    throw new EntityNotFoundException("Folder not found!");
-                }
-        );
+    public void updateFileById(int id, FileUpdateDto fileUpdateDto) {
         final Optional<FileEntity> fileEntity = fileRepository.findById(id);
         fileEntity.ifPresentOrElse(
-                (file) -> log.info("File with id = {} has been found.", file.getId()),
+                (file) -> {
+                    log.info("File with id = {} has been found.", file.getId());
+                    fileMapper.mergeFileEntityAndFileUpdateDto(file, fileUpdateDto);
+                    fileRepository.save(file);
+                },
                 () -> {
                     log.warn("File hasn't been found.");
                     throw new EntityNotFoundException("File not found!");
-                });
-        Optional.of(fileDto)
-                .map(fileMapper::fileDtoToFileEntity)
-                .map((file) -> {
-                    file.setId(id);
-                    return fileRepository.save(file);
                 });
         log.info("File with id = {} has been updated.", id);
     }

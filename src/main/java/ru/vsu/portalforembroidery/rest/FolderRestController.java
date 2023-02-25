@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
+import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -32,8 +33,8 @@ public class FolderRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateFolder(@PathVariable final int id, @RequestBody @Valid final FolderDto folderDto) {
-        folderService.updateFolderById(id, folderDto);
+    public ResponseEntity<String> updateFolder(@PathVariable final int id, @RequestBody @Valid final FolderUpdateDto folderUpdateDto) {
+        folderService.updateFolderById(id, folderUpdateDto);
         return new ResponseEntity<>("Folder was updated!", HttpStatus.OK);
     }
 

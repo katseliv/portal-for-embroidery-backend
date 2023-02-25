@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.FileDto;
+import ru.vsu.portalforembroidery.model.dto.FileUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
@@ -34,8 +35,8 @@ public class FileRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateFile(@PathVariable final int id, @RequestBody @Valid final FileDto fileDto) {
-        fileService.updateFileById(id, fileDto);
+    public ResponseEntity<String> updateFile(@PathVariable final int id, @RequestBody @Valid final FileUpdateDto fileUpdateDto) {
+        fileService.updateFileById(id, fileUpdateDto);
         return new ResponseEntity<>("File was updated!", HttpStatus.OK);
     }
 
