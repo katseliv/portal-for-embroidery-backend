@@ -13,6 +13,6 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class FilteredViewListPage<T> extends ViewListPage<T> {
 
-    private final Map<String, String> filerParameters;
+    private final Map<String, String> filterParameters;
 
 }

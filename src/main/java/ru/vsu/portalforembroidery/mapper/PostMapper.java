@@ -77,6 +77,6 @@ public interface PostMapper {
 
     void mergePostEntityAndPostUpdateDto(@MappingTarget PostEntity entity, PostUpdateDto dto);
 
-    List<PostForListDto> postEntitiesToPostViewDtoList(Iterable<PostEntity> entities);
+    List<PostForListDto> postEntitiesToPostForListDtoList(Iterable<PostEntity> entities);
 
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
@@ -16,16 +17,15 @@ import ru.vsu.portalforembroidery.model.dto.FileDto;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
-import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
-import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.model.entity.*;
 import ru.vsu.portalforembroidery.repository.*;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -224,6 +224,29 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
 
     @Override
     @Transactional(readOnly = true)
+    public FilteredViewListPage<PostForListDto> getFilteredPostViewListPage(final String page, final String size, final String tagName) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        final List<PostForListDto> postViewDtoList = listPosts(pageable, tagName);
+        final int totalAmount = numberOfFilteredPosts(tagName);
+
+        final int totalPages = (int) Math.ceil((double) totalAmount / pageSize);
+
+        final Map<String, String> filterParameters = new HashMap<>();
+        filterParameters.put("tagName", tagName);
+        return FilteredViewListPage.<PostForListDto>builder()
+                .filterParameters(filterParameters)
+                .pageSize(pageSize)
+                .totalPages(totalPages)
+                .pageNumber(pageNumber)
+                .viewDtoList(postViewDtoList)
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ViewListPage<CommentViewDto> getViewListPageOfComments(int id, String page, String size) {
         return commentService.getViewListPage(id, page, size);
     }
@@ -233,7 +256,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
     public List<PostForListDto> listPosts(Pageable pageable) {
         final List<PostEntity> postEntities = postRepository.findAll(pageable).getContent();
         log.info("There have been found {} posts.", postEntities.size());
-        return postMapper.postEntitiesToPostViewDtoList(postEntities);
+        return postMapper.postEntitiesToPostForListDtoList(postEntities);
     }
 
     @Override
@@ -241,6 +264,22 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
         final int numberOfPosts = (int) postRepository.count();
         log.info("There have been found {} posts.", numberOfPosts);
         return numberOfPosts;
+    }
+
+    @Override
+    public List<PostForListDto> listPosts(final Pageable pageable, final String tagName) {
+        final Specification<PostEntity> specification = PostRepository.hasTagName(tagName);
+        final List<PostEntity> postEntities = postRepository.findAll(specification, pageable).getContent();
+        log.info("There have been found {} posts.", postEntities.size());
+        return postMapper.postEntitiesToPostForListDtoList(postEntities);
+    }
+
+    @Override
+    public int numberOfFilteredPosts(final String tagName) {
+        final Specification<PostEntity> specification = PostRepository.hasTagName(tagName);
+        final long numberOfFilteredPosts = postRepository.count(specification);
+        log.info("There have been found {} posts.", numberOfFilteredPosts);
+        return (int) numberOfFilteredPosts;
     }
 
 }

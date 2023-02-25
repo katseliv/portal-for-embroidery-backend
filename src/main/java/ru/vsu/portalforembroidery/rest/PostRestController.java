@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
-import ru.vsu.portalforembroidery.model.dto.view.CommentViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
-import ru.vsu.portalforembroidery.model.dto.view.PostViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.service.PostService;
 
 import javax.validation.Valid;
@@ -61,8 +58,8 @@ public class PostRestController {
     }
 
     @GetMapping
-    public ViewListPage<PostForListDto> getPosts(@RequestParam(required = false) final Map<String, String> allParams) {
-        return postService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    public FilteredViewListPage<PostForListDto> getPosts(@RequestParam(required = false) final Map<String, String> allParams) {
+        return postService.getFilteredPostViewListPage(allParams.get("page"), allParams.get("size"), allParams.get("tagName"));
     }
 
     @GetMapping("/{id}/comments")
