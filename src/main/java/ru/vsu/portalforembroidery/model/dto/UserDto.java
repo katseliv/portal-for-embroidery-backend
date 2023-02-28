@@ -30,7 +30,6 @@ public class UserDto {
     @Pattern(regexp = "^([A-Z]|[a-z]|[А-Я]|[а-я])+$", message = "Last Name mustn't contain a number.")
     private final String lastName;
 
-    @NotBlank(message = "Image is blank.")
     @ImageValid
     private final String base64StringImage;
 
@@ -44,10 +43,6 @@ public class UserDto {
     @NotBlank(message = "Email is blank.")
     @Email(message = "Email invalid.")
     private final String email;
-
-    @NotNull(message = "Role Id is null.")
-    @Positive(message = "Role Id is negative or zero.")
-    private final Integer roleId;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class UserDtoBuilder {

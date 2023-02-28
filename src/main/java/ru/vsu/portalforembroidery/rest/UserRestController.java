@@ -41,8 +41,8 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@RequestBody @Valid final UserDto userDto, @PathVariable final int id) {
-        userService.updateUserById(userDto, id);
+    public ResponseEntity<String> updateUser(@PathVariable final int id, @RequestBody @Valid final UserDto userDto) {
+        userService.updateUserById(id, userDto);
         return new ResponseEntity<>("User was updated!", HttpStatus.OK);
     }
 
