@@ -38,6 +38,12 @@ public interface PostMapper {
     @Mapping(target = "countLikes", source = "likes", qualifiedByName = "listOfLikesToCountLikes")
     PostForListDto postEntityToPostForListDto(PostEntity entity);
 
+    @Mapping(target = "designName", source = "entity.design.name")
+    @Mapping(target = "designBase64StringImage", source = "entity.design.files", qualifiedByName = "listOfFilesToFile")
+    @Mapping(target = "countLikes", source = "entity.likes", qualifiedByName = "listOfLikesToCountLikes")
+    @Mapping(target = "liked", source = "liked")
+    PostForListDto postEntityToPostForListDto(PostEntity entity, boolean liked);
+
     @Named(value = "listOfFilesToListOfStrings")
     default List<FileViewDto> mapListOfFilesToListOfStrings(List<FileEntity> files) {
         return files.stream().map(fileEntity -> {

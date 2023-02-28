@@ -14,5 +14,6 @@ public class PostForListDto {
     private final String designBase64StringImage;
     private final String description;
     private final Integer countLikes;
+    private final boolean liked;
 
 }

@@ -31,7 +31,7 @@ public interface PostService {
 
     FilteredViewListPage<PostForListDto> getFilteredPostViewListPage(String page, String size, String tagName);
 
-    ViewListPage<CommentViewDto> getViewListPageOfComments(int id, String page, String size);
+    ViewListPage<CommentViewDto> getCommentViewListPage(int id, String page, String size);
 
     List<PostForListDto> listPosts(Pageable pageable);
 

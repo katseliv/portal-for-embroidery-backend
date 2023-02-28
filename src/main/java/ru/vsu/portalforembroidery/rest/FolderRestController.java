@@ -51,13 +51,13 @@ public class FolderRestController {
     @GetMapping("/{id}/folders")
     public ViewListPage<FolderViewDto> getFoldersParentFolder(@PathVariable final int id,
                                                               @RequestParam(required = false) final Map<String, String> allParams) {
-        return folderService.getViewListPageOfChildrenFolders(id, allParams.get("page"), allParams.get("size"));
+        return folderService.getChildrenFolderViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
     @GetMapping("/{id}/files")
     public ViewListPage<FileForListDto> getFilesFolder(@PathVariable final int id,
                                                        @RequestParam(required = false) final Map<String, String> allParams) {
-        return folderService.getViewListPageOfFiles(id, allParams.get("page"), allParams.get("size"));
+        return folderService.getFileViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
 }

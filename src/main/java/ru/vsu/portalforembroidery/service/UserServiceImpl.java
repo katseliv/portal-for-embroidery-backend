@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,23 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityAlreadyExistsException;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
+import ru.vsu.portalforembroidery.mapper.PostMapper;
 import ru.vsu.portalforembroidery.mapper.UserMapper;
 import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.UserDetailsDto;
 import ru.vsu.portalforembroidery.model.dto.UserDto;
 import ru.vsu.portalforembroidery.model.dto.UserRegistrationDto;
-import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.UserForListDto;
-import ru.vsu.portalforembroidery.model.dto.view.UserViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.*;
+import ru.vsu.portalforembroidery.model.entity.PostEntity;
 import ru.vsu.portalforembroidery.model.entity.UserEntity;
+import ru.vsu.portalforembroidery.repository.PostRepository;
 import ru.vsu.portalforembroidery.repository.UserRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,9 +39,12 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
     @Value("${pagination.defaultPageSize}")
     private int defaultPageSize;
 
+    private final PostService postService;
     private final FolderService folderService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final PostMapper postMapper;
     private final UserMapper userMapper;
 
     @Override
@@ -183,8 +185,32 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<FolderViewDto> getViewListPageOfFolders(int id, String page, String size) {
+    public ViewListPage<FolderViewDto> getFolderViewListPage(int id, String page, String size) {
         return folderService.getViewListPage(id, page, size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FilteredViewListPage<PostForListDto> getFilteredPostViewListPage(final int userId, final String page, final String size, final String tagName) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        final List<PostForListDto> postForListDtoList = listPosts(userId, pageable, tagName);
+        final int totalAmount = postService.numberOfFilteredPosts(tagName);
+
+        final Map<String, String> filterParameters = new HashMap<>();
+        filterParameters.put("tagName", tagName);
+
+        final int totalPages = (int) Math.ceil((double) totalAmount / pageSize);
+        return FilteredViewListPage.<PostForListDto>builder()
+                .filterParameters(filterParameters)
+                .pageSize(pageSize)
+                .totalPages(totalPages)
+                .totalCount(totalAmount)
+                .pageNumber(pageNumber)
+                .viewDtoList(postForListDtoList)
+                .build();
     }
 
     @Override
@@ -208,6 +234,17 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
         final long numberOfUsers = userRepository.count();
         log.info("There have been found {} users.", numberOfUsers);
         return (int) numberOfUsers;
+    }
+
+    @Override
+    public List<PostForListDto> listPosts(final int userId, final Pageable pageable, final String tagName) {
+        final Specification<PostEntity> specification = PostRepository.hasTagName(tagName);
+        final List<PostEntity> postEntities = postRepository.findAll(specification, pageable).getContent();
+        log.info("There have been found {} posts.", postEntities.size());
+        return postEntities.stream().map(post -> {
+            boolean liked = post.getLikes().stream().anyMatch(like -> like.getId().getUserId() == userId && Objects.equals(like.getId().getPostId(), post.getId()));
+            return postMapper.postEntityToPostForListDto(post, liked);
+        }).toList();
     }
 
 }

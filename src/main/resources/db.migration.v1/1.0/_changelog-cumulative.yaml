@@ -26,3 +26,11 @@ databaseChangeLog:
         - sqlFile:
             path: PFE-001-202302181425.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: PFE-001-202302282045
+      author: EkaterinaSelivanova
+      comment: Drop Null Constraint In The File Table
+      changes:
+        - sqlFile:
+            path: PFE-001-202302282045.sql
+            relativeToChangelogFile: true

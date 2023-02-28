@@ -23,9 +23,9 @@ public interface FolderService {
 
     ViewListPage<FolderViewDto> getViewListPage(int userId, String page, String size);
 
-    ViewListPage<FolderViewDto> getViewListPageOfChildrenFolders(int folderId, String page, String size);
+    ViewListPage<FolderViewDto> getChildrenFolderViewListPage(int folderId, String page, String size);
 
-    ViewListPage<FileForListDto> getViewListPageOfFiles(int id, String page, String size);
+    ViewListPage<FileForListDto> getFileViewListPage(int id, String page, String size);
 
     List<FolderViewDto> listFolders(Pageable pageable);
 

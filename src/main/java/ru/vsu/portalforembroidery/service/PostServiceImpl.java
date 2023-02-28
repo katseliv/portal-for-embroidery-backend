@@ -259,7 +259,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
 
         final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        final List<PostForListDto> postViewDtoList = listPosts(pageable, tagName);
+        final List<PostForListDto> postForListDtoList = listPosts(pageable, tagName);
         final int totalAmount = numberOfFilteredPosts(tagName);
 
         final int totalPages = (int) Math.ceil((double) totalAmount / pageSize);
@@ -270,14 +270,15 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
                 .filterParameters(filterParameters)
                 .pageSize(pageSize)
                 .totalPages(totalPages)
+                .totalCount(totalAmount)
                 .pageNumber(pageNumber)
-                .viewDtoList(postViewDtoList)
+                .viewDtoList(postForListDtoList)
                 .build();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<CommentViewDto> getViewListPageOfComments(int id, String page, String size) {
+    public ViewListPage<CommentViewDto> getCommentViewListPage(int id, String page, String size) {
         return commentService.getViewListPage(id, page, size);
     }
 

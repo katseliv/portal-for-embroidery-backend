@@ -153,7 +153,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<FolderViewDto> getViewListPageOfChildrenFolders(int folderId, String page, String size) {
+    public ViewListPage<FolderViewDto> getChildrenFolderViewListPage(int folderId, String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
 
@@ -169,7 +169,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<FileForListDto> getViewListPageOfFiles(int id, String page, String size) {
+    public ViewListPage<FileForListDto> getFileViewListPage(int id, String page, String size) {
         return fileService.getViewListPage(id, page, size);
     }
 

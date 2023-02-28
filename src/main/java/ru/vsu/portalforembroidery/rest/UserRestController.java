@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.dto.UserDto;
 import ru.vsu.portalforembroidery.model.dto.UserRegistrationDto;
-import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.UserForListDto;
-import ru.vsu.portalforembroidery.model.dto.view.UserViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.service.UserService;
 
 import javax.validation.Valid;
@@ -56,10 +53,15 @@ public class UserRestController {
         return userService.getViewListPage(allParams.get("page"), allParams.get("size"));
     }
 
+    @GetMapping("/{id}/posts")
+    public FilteredViewListPage<PostForListDto> getPostsUser(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
+        return userService.getFilteredPostViewListPage(id, allParams.get("page"), allParams.get("size"), allParams.get("tagName"));
+    }
+
     @GetMapping("/{id}/folders")
     public ViewListPage<FolderViewDto> getFoldersUser(@PathVariable final int id,
                                                       @RequestParam(required = false) final Map<String, String> allParams) {
-        return userService.getViewListPageOfFolders(id, allParams.get("page"), allParams.get("size"));
+        return userService.getFolderViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
 }

@@ -73,7 +73,7 @@ public class PostRestController {
     @GetMapping("/{id}/comments")
     public ViewListPage<CommentViewDto> getCommentsPost(@PathVariable final int id,
                                                         @RequestParam(required = false) final Map<String, String> allParams) {
-        return postService.getViewListPageOfComments(id, allParams.get("page"), allParams.get("size"));
+        return postService.getCommentViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
 }
