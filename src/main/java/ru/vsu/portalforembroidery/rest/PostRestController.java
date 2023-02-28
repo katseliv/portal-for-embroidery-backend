@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
+import ru.vsu.portalforembroidery.model.dto.TagDto;
 import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.service.PostService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -34,6 +36,12 @@ public class PostRestController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updatePost(@PathVariable final int id, @RequestBody @Valid final PostUpdateDto postUpdateDto) {
         postService.updatePostById(id, postUpdateDto);
+        return new ResponseEntity<>("Post was updated!", HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/tags")
+    public ResponseEntity<String> updatePostByTags(@PathVariable final int id, @RequestBody @Valid final List<TagDto> tags) {
+        postService.updatePostByIdAndTags(id, tags);
         return new ResponseEntity<>("Post was updated!", HttpStatus.OK);
     }
 

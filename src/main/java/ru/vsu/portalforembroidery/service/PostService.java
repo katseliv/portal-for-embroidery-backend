@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.LikeDto;
 import ru.vsu.portalforembroidery.model.dto.PostDto;
 import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
+import ru.vsu.portalforembroidery.model.dto.TagDto;
 import ru.vsu.portalforembroidery.model.dto.view.*;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface PostService {
     PostViewDto getPostViewById(int id);
 
     void updatePostById(int id, PostUpdateDto postUpdateDto);
+
+    void updatePostByIdAndTags(int id, List<TagDto> tags);
 
     void deletePostById(int id);
 

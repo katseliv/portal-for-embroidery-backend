@@ -12,11 +12,9 @@ import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FileMapper;
 import ru.vsu.portalforembroidery.mapper.PostMapper;
+import ru.vsu.portalforembroidery.mapper.TagMapper;
 import ru.vsu.portalforembroidery.model.Role;
-import ru.vsu.portalforembroidery.model.dto.FileDto;
-import ru.vsu.portalforembroidery.model.dto.LikeDto;
-import ru.vsu.portalforembroidery.model.dto.PostDto;
-import ru.vsu.portalforembroidery.model.dto.PostUpdateDto;
+import ru.vsu.portalforembroidery.model.dto.*;
 import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.model.entity.*;
 import ru.vsu.portalforembroidery.repository.*;
@@ -41,12 +39,15 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
     private final CommentService commentService;
     private final PostRepository postRepository;
     private final FileRepository fileRepository;
+    private final TagRepository tagRepository;
     private final DesignRepository designRepository;
     private final DesignFileRepository designFileRepository;
+    private final DesignTagRepository designTagRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final PostMapper postMapper;
     private final FileMapper fileMapper;
+    private final TagMapper tagMapper;
 
     @Override
     @Transactional
@@ -98,6 +99,35 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
                     log.info("Post with id = {} has been found.", post.getId());
                     postMapper.mergePostEntityAndPostUpdateDto(post, postUpdateDto);
                     postRepository.save(post);
+                },
+                () -> {
+                    log.warn("Post hasn't been found.");
+                    throw new EntityNotFoundException("Post not found!");
+                });
+        log.info("Post with id = {} has been updated.", id);
+    }
+
+    @Override
+    @Transactional
+    public void updatePostByIdAndTags(int id, List<TagDto> tags) {
+        final Optional<PostEntity> postEntity = postRepository.findById(id);
+        postEntity.ifPresentOrElse(
+                (post) -> {
+                    log.info("Post with id = {} has been found.", post.getId());
+                    List<TagEntity> tagEntities = tags.stream()
+                            .map(tagMapper::tagDtoToTagEntity).toList();
+                    tagRepository.saveAll(tagEntities);
+
+                    Integer designId = post.getDesign().getId();
+                    List<DesignTagEntity> designTagEntities = tagEntities.stream()
+                            .map(tag -> DesignTagEntity.builder()
+                                    .id(DesignTagId.builder()
+                                            .designId(designId)
+                                            .tagId(tag.getId())
+                                            .build())
+                                    .build()).toList();
+                    designTagRepository.saveAll(designTagEntities);
+                    post.setCreationDatetime(LocalDateTime.now());
                 },
                 () -> {
                     log.warn("Post hasn't been found.");
