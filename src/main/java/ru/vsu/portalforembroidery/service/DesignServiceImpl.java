@@ -3,8 +3,6 @@ package ru.vsu.portalforembroidery.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
@@ -17,7 +15,6 @@ import ru.vsu.portalforembroidery.model.entity.DesignEntity;
 import ru.vsu.portalforembroidery.model.entity.DesignerProfileEntity;
 import ru.vsu.portalforembroidery.repository.DesignRepository;
 import ru.vsu.portalforembroidery.repository.DesignerProfileRepository;
-import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -109,21 +106,17 @@ public class DesignServiceImpl implements DesignService, PaginationService<Desig
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<DesignViewDto> getViewListPage(String page, String size) {
-        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
-        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+    public ViewListPage<DesignViewDto> getViewListPage() {
+        final List<DesignViewDto> listDesigns = listDesigns();
+        final int totalAmount = listDesigns.size();
 
-        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        final List<DesignViewDto> listDesigns = listDesigns(pageable);
-        final int totalAmount = numberOfDesigns();
-
-        return getViewListPage(totalAmount, pageSize, pageNumber, listDesigns);
+        return getViewListPage(totalAmount, totalAmount, 1, listDesigns);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DesignViewDto> listDesigns(Pageable pageable) {
-        final List<DesignEntity> designEntities = designRepository.findAll(pageable).getContent();
+    public List<DesignViewDto> listDesigns() {
+        final List<DesignEntity> designEntities = designRepository.findAll();
         log.info("There have been found {} designs.", designEntities.size());
         return designMapper.designEntitiesToDesignViewDtoList(designEntities);
     }

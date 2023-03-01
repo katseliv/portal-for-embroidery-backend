@@ -41,20 +41,32 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
     @Override
     @Transactional
     public int createFile(FileDto fileDto) {
-        final Optional<FolderEntity> folderEntity = folderRepository.findById(fileDto.getFolderId());
-        folderEntity.ifPresentOrElse(
-                (user) -> log.info("Folder has been found."),
-                () -> {
-                    log.warn("Folder hasn't been found.");
-                    throw new EntityNotFoundException("Folder not found!");
-                }
-        );
+        final FolderEntity folderEntity = getFolder(fileDto);
         final FileEntity fileEntity = Optional.of(fileDto)
                 .map(fileMapper::fileDtoToFileEntity)
-                .map(fileRepository::save)
+                .map((file) -> {
+                    file.setFolder(folderEntity);
+                    fileRepository.save(file);
+                    return file;
+                })
                 .orElseThrow(() -> new EntityCreationException("File hasn't been created!"));
         log.info("File with id = {} has been created.", fileEntity.getId());
         return fileEntity.getId();
+    }
+
+    private FolderEntity getFolder(FileDto fileDto) {
+        if (fileDto.getFolderId() != null) {
+            final Optional<FolderEntity> folderEntityOptional = folderRepository.findById(fileDto.getFolderId());
+            if (folderEntityOptional.isPresent()) {
+                log.info("Folder has been found.");
+                return folderEntityOptional.get();
+            } else {
+                log.warn("Folder hasn't been found.");
+                throw new EntityNotFoundException("Folder not found!");
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override

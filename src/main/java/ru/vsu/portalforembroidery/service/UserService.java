@@ -32,15 +32,17 @@ public interface UserService {
 
     ViewListPage<UserForListDto> getViewListPage(String page, String size);
 
+    ViewListPage<UserForListDto> getDesignerViewListPage();
+
     ViewListPage<FolderViewDto> getFolderViewListPage(int id, String page, String size);
 
     FilteredViewListPage<PostForListDto> getFilteredPostViewListPage(int userId, String page, String size, String tagName);
 
-    List<UserForListDto> listDesigners(Pageable pageable);
-
     List<UserForListDto> listUsers(Pageable pageable);
 
     int numberOfUsers();
+
+    List<UserForListDto> listDesigners();
 
     List<PostForListDto> listPosts(int userId, Pageable pageable, String tagName);
 

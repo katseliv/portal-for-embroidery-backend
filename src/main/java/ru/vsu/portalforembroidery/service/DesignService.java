@@ -17,9 +17,9 @@ public interface DesignService {
 
     void deleteDesignById(int id);
 
-    ViewListPage<DesignViewDto> getViewListPage(String page, String size);
+    ViewListPage<DesignViewDto> getViewListPage();
 
-    List<DesignViewDto> listDesigns(Pageable pageable);
+    List<DesignViewDto> listDesigns();
 
     int numberOfDesigns();
 

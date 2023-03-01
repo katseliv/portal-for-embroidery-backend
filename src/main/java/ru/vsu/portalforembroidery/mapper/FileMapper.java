@@ -32,6 +32,9 @@ public interface FileMapper {
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
     FileEntity fileDtoToFileEntity(FileDto dto);
 
+    @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
+    FileEntity fileDtoWithoutFolderToFileEntity(FileDto dto);
+
     FileEntity fileUpdateDtoToFileEntity(FileUpdateDto dto);
 
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")

@@ -53,6 +53,11 @@ public class UserRestController {
         return userService.getViewListPage(allParams.get("page"), allParams.get("size"));
     }
 
+    @GetMapping("/designers")
+    public ViewListPage<UserForListDto> getDesigners() {
+        return userService.getDesignerViewListPage();
+    }
+
     @GetMapping("/{id}/posts")
     public FilteredViewListPage<PostForListDto> getPostsUser(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
         return userService.getFilteredPostViewListPage(id, allParams.get("page"), allParams.get("size"), allParams.get("tagName"));

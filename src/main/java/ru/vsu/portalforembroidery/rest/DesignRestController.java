@@ -42,8 +42,8 @@ public class DesignRestController {
     }
 
     @GetMapping
-    public ViewListPage<DesignViewDto> getDesigns(@RequestParam(required = false) final Map<String, String> allParams) {
-        return designService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    public ViewListPage<DesignViewDto> getDesigns() {
+        return designService.getViewListPage();
     }
 
 }

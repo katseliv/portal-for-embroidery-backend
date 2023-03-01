@@ -185,6 +185,14 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
 
     @Override
     @Transactional(readOnly = true)
+    public ViewListPage<UserForListDto> getDesignerViewListPage() {
+        final List<UserForListDto> listDesigners = listDesigners();
+        final int totalAmount = listDesigners().size();
+        return getViewListPage(totalAmount, totalAmount, 1, listDesigners);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ViewListPage<FolderViewDto> getFolderViewListPage(int id, String page, String size) {
         return folderService.getViewListPage(id, page, size);
     }
@@ -215,14 +223,6 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserForListDto> listDesigners(Pageable pageable) {
-        final List<UserEntity> userEntities = userRepository.findAllByRole(Role.DESIGNER, pageable);
-        log.info("There have been found {} designers.", userEntities.size());
-        return userMapper.userEntitiesToUserForListDtoList(userEntities);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<UserForListDto> listUsers(Pageable pageable) {
         final List<UserEntity> userEntities = userRepository.findAll(pageable).getContent();
         log.info("There have been found {} users.", userEntities.size());
@@ -234,6 +234,14 @@ public class UserServiceImpl implements UserService, PaginationService<UserForLi
         final long numberOfUsers = userRepository.count();
         log.info("There have been found {} users.", numberOfUsers);
         return (int) numberOfUsers;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserForListDto> listDesigners() {
+        final List<UserEntity> userEntities = userRepository.findAllByRole(Role.DESIGNER);
+        log.info("There have been found {} designers.", userEntities.size());
+        return userMapper.userEntitiesToUserForListDtoList(userEntities);
     }
 
     @Override

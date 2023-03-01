@@ -58,7 +58,7 @@ public class PostServiceImpl implements PostService, PaginationService<PostForLi
                 .map(post -> {
                     List<FileDto> fileDtoList = postDto.getFiles();
                     List<FileEntity> fileEntities = fileDtoList.stream()
-                            .map(fileMapper::fileDtoToFileEntity).toList();
+                            .map(fileMapper::fileDtoWithoutFolderToFileEntity).toList();
                     fileRepository.saveAll(fileEntities);
 
                     Integer designId = postDto.getDesignId();
