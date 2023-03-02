@@ -53,7 +53,8 @@ public class AuthRestController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-        final String email = (String) securityContextFacade.getContext().getAuthentication().getPrincipal();
+        final UserDetailsDto userDetailsDto = (UserDetailsDto) securityContextFacade.getContext().getAuthentication().getPrincipal();
+        final String email = userDetailsDto.getEmail();
         authService.logout(email);
         return new ResponseEntity<>("Logged out successfully!", HttpStatus.OK);
     }

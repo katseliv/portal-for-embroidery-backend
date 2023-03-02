@@ -30,12 +30,14 @@ public class AuthServiceImpl implements AuthService {
         if (jwtTokenService.existsByUserEmail(email)) {
             final String accessToken = jwtTokenService.getJwtTokenByEmailAndType(email, JwtTokenType.ACCESS);
             final String refreshToken = jwtTokenService.getJwtTokenByEmailAndType(email, JwtTokenType.REFRESH);
+            final Integer accessTokenExpiresAt = jwtTokenProvider.getExpiresAt(accessToken);
             log.info("User with email = {} has been logged in with pre-existing tokens.", email);
-            return new LoginResponse(id, accessToken, refreshToken);
+            return new LoginResponse(id, accessToken, refreshToken, accessTokenExpiresAt);
         }
 
         final String accessToken = jwtTokenProvider.generateAccessToken(userDetailsDto);
         final String refreshToken = jwtTokenProvider.generateRefreshToken(userDetailsDto);
+        final Integer accessTokenExpiresAt = jwtTokenProvider.getExpiresAt(accessToken);
 
         final JwtTokenDto jwtAccessTokenDto = JwtTokenDto.builder()
                 .token(accessToken)
@@ -51,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         jwtTokenService.createJwtToken(jwtAccessTokenDto);
         jwtTokenService.createJwtToken(jwtRefreshTokenDto);
         log.info("User with email = {} has been logged in with new tokens.", email);
-        return new LoginResponse(id, accessToken, refreshToken);
+        return new LoginResponse(id, accessToken, refreshToken, accessTokenExpiresAt);
     }
 
     @Override
@@ -80,6 +82,7 @@ public class AuthServiceImpl implements AuthService {
         final UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(email);
         final String accessToken = jwtTokenProvider.generateAccessToken(userDetailsDto);
         final String updatedRefreshToken = jwtTokenProvider.updateIssuedAtOfRefreshToken(userDetailsDto, refreshToken);
+        final Integer accessTokenExpiresAt = jwtTokenProvider.getExpiresAt(accessToken);
 
         final JwtTokenDto jwtAccessTokenDto = JwtTokenDto.builder()
                 .token(accessToken)
@@ -95,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
         jwtTokenService.updateJwtToken(jwtAccessTokenDto);
         jwtTokenService.updateJwtToken(jwtRefreshTokenDto);
         log.info("New Access Token has been created.");
-        return new JwtResponse(accessToken, updatedRefreshToken);
+        return new JwtResponse(accessToken, updatedRefreshToken, accessTokenExpiresAt);
     }
 
     @Override

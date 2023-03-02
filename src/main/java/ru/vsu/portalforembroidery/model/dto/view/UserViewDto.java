@@ -17,5 +17,6 @@ public class UserViewDto {
     private final String base64StringImage;
     private final String phoneNumber;
     private final String email;
+    private final String role;
 
 }

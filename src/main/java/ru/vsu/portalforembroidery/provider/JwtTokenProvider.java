@@ -46,7 +46,7 @@ public class JwtTokenProvider implements Serializable {
 
         log.info("Access Jwt Token for email = {} has been generated.", userDetailsDto.getEmail());
         return JWT.create()
-                .withIssuer("Dance Studio")
+                .withIssuer("Portal for Embroidery")
                 .withIssuedAt(new Date())
                 .withSubject(userDetailsDto.getId().toString())
                 .withClaim("email", userDetailsDto.getEmail())
@@ -64,7 +64,7 @@ public class JwtTokenProvider implements Serializable {
 
         log.info("Refresh Jwt Token for email = {} has been generated.", userDetailsDto.getEmail());
         return JWT.create()
-                .withIssuer("Dance Studio")
+                .withIssuer("Portal for Embroidery")
                 .withIssuedAt(new Date())
                 .withSubject(userDetailsDto.getId().toString())
                 .withClaim("email", userDetailsDto.getEmail())
@@ -78,7 +78,7 @@ public class JwtTokenProvider implements Serializable {
 
         log.info("Jwt Token's \"Issued At\" for email = {} has been updated.", userDetailsDto.getEmail());
         return JWT.create()
-                .withIssuer("Dance Studio")
+                .withIssuer("Portal for Embroidery")
                 .withIssuedAt(new Date())
                 .withSubject(userDetailsDto.getId().toString())
                 .withClaim("email", userDetailsDto.getEmail())
@@ -112,6 +112,18 @@ public class JwtTokenProvider implements Serializable {
             final String email = jwt.getClaim("email").asString();
             log.info("Jwt Token is valid. Email = {} has been received.", email);
             return email;
+        } catch (final JWTDecodeException exception) {
+            log.warn("Jwt Token is invalid! Can't get email!");
+            throw new DecodeJwtTokenException("Jwt Token is invalid!", exception);
+        }
+    }
+
+    public Integer getExpiresAt(final String token) {
+        try {
+            final DecodedJWT jwt = JWT.decode(token);
+            final Integer expiresAt = (int) jwt.getExpiresAt().getTime();
+            log.info("Jwt Token is valid. Expires At = {} has been received.", expiresAt);
+            return expiresAt;
         } catch (final JWTDecodeException exception) {
             log.warn("Jwt Token is invalid! Can't get email!");
             throw new DecodeJwtTokenException("Jwt Token is invalid!", exception);
