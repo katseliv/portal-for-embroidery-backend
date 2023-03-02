@@ -12,7 +12,7 @@ public class FolderViewDto {
     private final Integer id;
     private final String name;
     private final String parentFolderName;
-    private final String creatorDesignerFirstName;
-    private final String creatorDesignerLastName;
+    private final String creatorUserFirstName;
+    private final String creatorUserLastName;
 
 }

@@ -15,10 +15,10 @@ import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
-import ru.vsu.portalforembroidery.model.entity.DesignerProfileEntity;
 import ru.vsu.portalforembroidery.model.entity.FolderEntity;
-import ru.vsu.portalforembroidery.repository.DesignerProfileRepository;
+import ru.vsu.portalforembroidery.model.entity.UserEntity;
 import ru.vsu.portalforembroidery.repository.FolderRepository;
+import ru.vsu.portalforembroidery.repository.UserRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;
@@ -36,13 +36,13 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     private final FileService fileService;
     private final FolderRepository folderRepository;
-    private final DesignerProfileRepository designerProfileRepository;
+    private final UserRepository userRepository;
     private final FolderMapper folderMapper;
 
     @Override
     @Transactional
     public int createFolder(FolderDto folderDto) {
-        checkExistingDesignerProfile(folderDto);
+        checkExistingUser(folderDto);
         final FolderEntity parentFolderEntity = getParentFolder(folderDto);
         final FolderEntity folderEntity = Optional.of(folderDto)
                 .map(folderMapper::folderDtoToFolderEntity)
@@ -84,13 +84,13 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
         log.info("Folder with id = {} has been updated.", id);
     }
 
-    private void checkExistingDesignerProfile(FolderDto folderDto) {
-        final Optional<DesignerProfileEntity> designerProfileEntity = designerProfileRepository.findById(folderDto.getCreatorDesignerId());
-        designerProfileEntity.ifPresentOrElse(
-                (designerProfile) -> log.info("Designer Profile has been found."),
+    private void checkExistingUser(FolderDto folderDto) {
+        final Optional<UserEntity> userEntity = userRepository.findById(folderDto.getCreatorUserId());
+        userEntity.ifPresentOrElse(
+                (user) -> log.info("User has been found."),
                 () -> {
-                    log.warn("Designer Profile hasn't been found.");
-                    throw new EntityNotFoundException("Designer Profile not found!");
+                    log.warn("User hasn't been found.");
+                    throw new EntityNotFoundException("User not found!");
                 }
         );
     }
@@ -184,7 +184,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     @Override
     @Transactional(readOnly = true)
     public List<FolderViewDto> listFoldersByUser(int userId, Pageable pageable) {
-        final List<FolderEntity> folderEntities = folderRepository.findAllByCreatorDesignerIdAndParentFolderIdIsNull(userId, pageable).getContent();
+        final List<FolderEntity> folderEntities = folderRepository.findAllByCreatorUserIdAndParentFolderIdIsNull(userId, pageable).getContent();
         log.info("There have been found {} folders.", folderEntities.size());
         return folderMapper.folderEntitiesToFolderViewDtoList(folderEntities);
     }
@@ -198,7 +198,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     @Override
     public int numberOfFoldersByUser(int userId) {
-        final long numberOfFolders = folderRepository.countByCreatorDesignerId(userId);
+        final long numberOfFolders = folderRepository.countByCreatorUserId(userId);
         log.info("There have been found {} folders.", numberOfFolders);
         return (int) numberOfFolders;
     }

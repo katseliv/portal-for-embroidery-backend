@@ -9,10 +9,10 @@ import ru.vsu.portalforembroidery.model.entity.FolderEntity;
 @Repository
 public interface FolderRepository extends JpaRepository<FolderEntity, Integer> {
 
-    Page<FolderEntity> findAllByCreatorDesignerId(int userId, Pageable pageable);
+    Page<FolderEntity> findAllByCreatorUserId(int userId, Pageable pageable);
 
-    Page<FolderEntity> findAllByCreatorDesignerIdAndParentFolderIdIsNull(int userId, Pageable pageable);
+    Page<FolderEntity> findAllByCreatorUserIdAndParentFolderIdIsNull(int userId, Pageable pageable);
 
-    long countByCreatorDesignerId(int userId);
+    long countByCreatorUserId(int userId);
 
 }

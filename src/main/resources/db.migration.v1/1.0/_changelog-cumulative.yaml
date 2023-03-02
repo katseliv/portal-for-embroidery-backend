@@ -34,3 +34,11 @@ databaseChangeLog:
         - sqlFile:
             path: PFE-001-202302282045.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: PFE-001-202303021925
+      author: EkaterinaSelivanova
+      comment: Alter Name In The Folder Table
+      changes:
+        - sqlFile:
+            path: PFE-001-202303021925.sql
+            relativeToChangelogFile: true

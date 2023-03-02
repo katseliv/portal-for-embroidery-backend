@@ -14,23 +14,23 @@ import java.util.List;
 public interface FolderMapper {
 
     @Mapping(target = "parentFolderId", source = "parentFolder.id")
-    @Mapping(target = "creatorDesignerId", source = "creatorDesigner.id")
+    @Mapping(target = "creatorUserId", source = "creatorUser.id")
     FolderDto folderEntityToFolderDto(FolderEntity entity);
 
     @Mapping(target = "parentFolderName", source = "parentFolder.name")
-    @Mapping(target = "creatorDesignerFirstName", source = "creatorDesigner.firstName")
-    @Mapping(target = "creatorDesignerLastName", source = "creatorDesigner.lastName")
+    @Mapping(target = "creatorUserFirstName", source = "creatorUser.firstName")
+    @Mapping(target = "creatorUserLastName", source = "creatorUser.lastName")
     FolderViewDto folderEntityToFolderViewDto(FolderEntity entity);
 
     @Mapping(target = "parentFolder.id", source = "parentFolderId")
-    @Mapping(target = "creatorDesigner.id", source = "creatorDesignerId")
+    @Mapping(target = "creatorUser.id", source = "creatorUserId")
     FolderEntity folderDtoToFolderEntity(FolderDto dto);
 
     FolderEntity folderUpdateDtoToFolderEntity(FolderUpdateDto dto);
 
     @Mapping(target = "parentFolder.name", source = "parentFolderName")
-    @Mapping(target = "creatorDesigner.firstName", source = "creatorDesignerFirstName")
-    @Mapping(target = "creatorDesigner.lastName", source = "creatorDesignerLastName")
+    @Mapping(target = "creatorUser.firstName", source = "creatorUserFirstName")
+    @Mapping(target = "creatorUser.lastName", source = "creatorUserLastName")
     FolderEntity folderViewDtoToFolderEntity(FolderViewDto dto);
 
     void mergeFolderEntityAndFolderUpdateDto(@MappingTarget FolderEntity entity, FolderUpdateDto dto);

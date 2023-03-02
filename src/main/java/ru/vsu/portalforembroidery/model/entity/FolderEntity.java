@@ -33,7 +33,7 @@ public class FolderEntity {
     private Set<FolderEntity> children = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "creator_designer_id", referencedColumnName = "id")
-    private UserEntity creatorDesigner;
+    @JoinColumn(name = "creator_user_id", referencedColumnName = "id")
+    private UserEntity creatorUser;
 
 }
