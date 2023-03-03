@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,19 +13,22 @@ import ru.vsu.portalforembroidery.exception.EntityAlreadyExistsException;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.DesignerProfileMapper;
+import ru.vsu.portalforembroidery.mapper.PostMapper;
 import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileDto;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileRegistrationDto;
 import ru.vsu.portalforembroidery.model.dto.view.DesignerProfileViewDto;
+import ru.vsu.portalforembroidery.model.dto.view.FilteredViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.DesignerProfileEntity;
+import ru.vsu.portalforembroidery.model.entity.PostEntity;
 import ru.vsu.portalforembroidery.repository.DesignerProfileRepository;
+import ru.vsu.portalforembroidery.repository.PostRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +42,9 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
 
     private final PasswordEncoder passwordEncoder;
     private final DesignerProfileRepository designerProfileRepository;
+    private final PostRepository postRepository;
     private final DesignerProfileMapper designerProfileMapper;
+    private final PostMapper postMapper;
 
     // TODO: 30.11.2022 подумать над логикой создания дизайнера
     @Override
@@ -125,6 +131,29 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
     }
 
     @Override
+    public FilteredViewListPage<PostForListDto> getFilteredPostViewListPage(int designerId, String page, String size, String tagName) {
+        final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
+        final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
+
+        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        final List<PostForListDto> postForListDtoList = listPosts(designerId, pageable, tagName);
+        final int totalAmount = postForListDtoList.size();
+
+        final Map<String, String> filterParameters = new HashMap<>();
+        filterParameters.put("tagName", tagName);
+
+        final int totalPages = (int) Math.ceil((double) totalAmount / pageSize);
+        return FilteredViewListPage.<PostForListDto>builder()
+                .filterParameters(filterParameters)
+                .pageSize(pageSize)
+                .totalPages(totalPages)
+                .totalCount(totalAmount)
+                .pageNumber(pageNumber)
+                .viewDtoList(postForListDtoList)
+                .build();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<DesignerProfileViewDto> listDesignerProfiles(Pageable pageable) {
         final List<DesignerProfileEntity> designerProfileEntities = designerProfileRepository.findAll(pageable).getContent();
@@ -137,6 +166,17 @@ public class DesignerProfileServiceImpl implements DesignerProfileService, Pagin
         final long numberOfDesignerProfiles = designerProfileRepository.count();
         log.info("There have been found {} designer-profiles.", numberOfDesignerProfiles);
         return (int) numberOfDesignerProfiles;
+    }
+
+    @Override
+    public List<PostForListDto> listPosts(final int designerId, final Pageable pageable, final String tagName) {
+        final Specification<PostEntity> specification = PostRepository.hasDesignerIdAndTagName(designerId, tagName);
+        final List<PostEntity> postEntities = postRepository.findAll(specification, pageable).getContent();
+        log.info("There have been found {} designer posts.", postEntities.size());
+        return postEntities.stream().map(post -> {
+            boolean liked = post.getLikes().stream().anyMatch(like -> like.getId().getUserId() == designerId && Objects.equals(like.getId().getPostId(), post.getId()));
+            return postMapper.postEntityToPostForListDto(post, liked);
+        }).toList();
     }
 
 }

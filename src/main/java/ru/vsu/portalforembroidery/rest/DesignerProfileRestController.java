@@ -8,6 +8,8 @@ import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileDto;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileRegistrationDto;
 import ru.vsu.portalforembroidery.model.dto.view.DesignerProfileViewDto;
+import ru.vsu.portalforembroidery.model.dto.view.FilteredViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.service.DesignerProfileService;
 
@@ -46,6 +48,11 @@ public class DesignerProfileRestController {
     @GetMapping
     public ViewListPage<DesignerProfileViewDto> getDesignerProfiles(@RequestParam(required = false) final Map<String, String> allParams) {
         return designerProfileService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    }
+
+    @GetMapping("/{id}/posts")
+    public FilteredViewListPage<PostForListDto> getPostsDesigner(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
+        return designerProfileService.getFilteredPostViewListPage(id, allParams.get("page"), allParams.get("size"), allParams.get("tagName"));
     }
 
 }

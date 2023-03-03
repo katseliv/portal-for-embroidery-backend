@@ -22,12 +22,25 @@ public interface PostRepository extends JpaRepository<PostEntity, Integer>, JpaS
     @Override
     Page<PostEntity> findAll(Specification<PostEntity> specification, @NonNull Pageable pageable);
 
-    static Specification<PostEntity> hasTagName(final String tagName) {
+    static Specification<PostEntity> hasDesignerIdAndTagName(final int designerId, final String tagName) {
         return (root, query, criteriaBuilder) -> {
-            final Predicate trainerNamePredicate = Strings.isBlank(tagName) ? null :
+            System.out.println(root.join("designer", JoinType.LEFT).get("id").toString());
+            final Predicate designerIdPredicate =
+                    criteriaBuilder.equal(root.join("designer", JoinType.LEFT).get("id"), designerId);
+            final Predicate tagNamePredicate = Strings.isBlank(tagName) ? null :
                     criteriaBuilder.like(root.join("design", JoinType.LEFT).join("tags").get("title"), "%" + tagName + "%");
 
-            final Predicate[] objects = Stream.of(trainerNamePredicate).filter(Objects::nonNull).toArray(Predicate[]::new);
+            final Predicate[] objects = Stream.of(designerIdPredicate, tagNamePredicate).filter(Objects::nonNull).toArray(Predicate[]::new);
+            return criteriaBuilder.and(objects);
+        };
+    }
+
+    static Specification<PostEntity> hasTagName(final String tagName) {
+        return (root, query, criteriaBuilder) -> {
+            final Predicate tagNamePredicate = Strings.isBlank(tagName) ? null :
+                    criteriaBuilder.like(root.join("design", JoinType.LEFT).join("tags").get("title"), "%" + tagName + "%");
+
+            final Predicate[] objects = Stream.of(tagNamePredicate).filter(Objects::nonNull).toArray(Predicate[]::new);
             return criteriaBuilder.and(objects);
         };
     }

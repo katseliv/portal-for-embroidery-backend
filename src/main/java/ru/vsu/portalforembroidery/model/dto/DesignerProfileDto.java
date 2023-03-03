@@ -31,7 +31,6 @@ public class DesignerProfileDto {
     @Pattern(regexp = "^([A-Z]|[a-z]|[А-Я]|[а-я])+$", message = "Last Name mustn't contain a number.")
     private final String lastName;
 
-    @NotBlank(message = "Image is blank.")
     @ImageValid
     private final String base64StringImage;
 

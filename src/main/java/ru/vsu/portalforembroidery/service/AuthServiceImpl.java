@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.portalforembroidery.exception.EntityCreationException;
 import ru.vsu.portalforembroidery.model.JwtTokenType;
+import ru.vsu.portalforembroidery.model.Role;
 import ru.vsu.portalforembroidery.model.dto.JwtTokenDto;
 import ru.vsu.portalforembroidery.model.dto.UserDetailsDto;
 import ru.vsu.portalforembroidery.model.response.JwtResponse;
@@ -27,12 +28,13 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(final UserDetailsDto userDetailsDto) {
         final Integer id = userDetailsDto.getId();
         final String email = userDetailsDto.getEmail();
+        final String role = userDetailsDto.getRoles().stream().findFirst().map(Enum::name).orElseGet(Role.USER::name);
         if (jwtTokenService.existsByUserEmail(email)) {
             final String accessToken = jwtTokenService.getJwtTokenByEmailAndType(email, JwtTokenType.ACCESS);
             final String refreshToken = jwtTokenService.getJwtTokenByEmailAndType(email, JwtTokenType.REFRESH);
             final Integer accessTokenExpiresAt = jwtTokenProvider.getExpiresAt(accessToken);
             log.info("User with email = {} has been logged in with pre-existing tokens.", email);
-            return new LoginResponse(id, accessToken, refreshToken, accessTokenExpiresAt);
+            return new LoginResponse(id, role, accessToken, refreshToken, accessTokenExpiresAt);
         }
 
         final String accessToken = jwtTokenProvider.generateAccessToken(userDetailsDto);
@@ -53,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
         jwtTokenService.createJwtToken(jwtAccessTokenDto);
         jwtTokenService.createJwtToken(jwtRefreshTokenDto);
         log.info("User with email = {} has been logged in with new tokens.", email);
-        return new LoginResponse(id, accessToken, refreshToken, accessTokenExpiresAt);
+        return new LoginResponse(id, role, accessToken, refreshToken, accessTokenExpiresAt);
     }
 
     @Override

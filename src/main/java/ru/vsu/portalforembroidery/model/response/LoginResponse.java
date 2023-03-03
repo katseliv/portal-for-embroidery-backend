@@ -10,6 +10,7 @@ import lombok.*;
 public class LoginResponse {
 
     private final Integer id;
+    private final String role;
     private final String accessToken;
     private final String refreshToken;
     private final Integer expiresAt;

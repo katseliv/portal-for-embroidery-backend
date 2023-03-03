@@ -17,7 +17,13 @@ public interface DesignerProfileMapper {
 
     DesignerProfileDto designerProfileEntityToDesignerProfileDto(DesignerProfileEntity entity);
 
+    @Mapping(target = "base64StringImage", source = "image", qualifiedByName = "bytesArrayImage")
     DesignerProfileViewDto designerProfileEntityToDesignerProfileViewDto(DesignerProfileEntity entity);
+
+    @Named(value = "bytesArrayImage")
+    default String mapImage(byte[] image) {
+        return Base64.getEncoder().encodeToString(image);
+    }
 
     DesignerProfileEntity designerProfileDtoToDesignerProfileEntity(DesignerProfileDto dto);
 

@@ -5,6 +5,8 @@ import ru.vsu.portalforembroidery.model.Provider;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileDto;
 import ru.vsu.portalforembroidery.model.dto.DesignerProfileRegistrationDto;
 import ru.vsu.portalforembroidery.model.dto.view.DesignerProfileViewDto;
+import ru.vsu.portalforembroidery.model.dto.view.FilteredViewListPage;
+import ru.vsu.portalforembroidery.model.dto.view.PostForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 
 import java.util.List;
@@ -21,8 +23,12 @@ public interface DesignerProfileService {
 
     ViewListPage<DesignerProfileViewDto> getViewListPage(String page, String size);
 
+    FilteredViewListPage<PostForListDto> getFilteredPostViewListPage(int designerId, String page, String size, String tagName);
+
     List<DesignerProfileViewDto> listDesignerProfiles(Pageable pageable);
 
     int numberOfDesignerProfiles();
+
+    List<PostForListDto> listPosts(int designerId, Pageable pageable, String tagName);
 
 }
