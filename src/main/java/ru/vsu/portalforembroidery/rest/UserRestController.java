@@ -64,8 +64,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}/folders")
-    public ViewListPage<FolderViewDto> getFoldersUser(@PathVariable final int id,
-                                                      @RequestParam(required = false) final Map<String, String> allParams) {
+    public ViewListPage<FolderViewDto> getFoldersUser(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
         return userService.getFolderViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
