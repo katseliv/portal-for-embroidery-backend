@@ -6,14 +6,14 @@ import java.util.List;
 
 public interface PaginationService<T> {
 
-    default ViewListPage<T> getViewListPage(double totalAmount, int pageSize, int pageNumber, List<T> userViewDtoList) {
+    default ViewListPage<T> getViewListPage(double totalAmount, int pageSize, int pageNumber, List<T> viewDtoList) {
         final int totalPages = (int) Math.ceil(totalAmount / pageSize);
         return ViewListPage.<T>builder()
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
                 .totalPages(totalPages)
                 .totalCount((int) totalAmount)
-                .viewDtoList(userViewDtoList)
+                .viewDtoList(viewDtoList)
                 .build();
     }
 

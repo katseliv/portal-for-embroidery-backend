@@ -28,8 +28,8 @@ public class FileDto {
     @NotBlank(message = "File is blank.")
     private final String base64StringFile;
 
-    @Positive(message = "Folder Id is negative or zero.")
-    private final Integer folderId;
+    @Positive(message = "Design Id is negative or zero.")
+    private final Integer designId;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class FileDtoBuilder {

@@ -15,10 +15,12 @@ import ru.vsu.portalforembroidery.model.dto.FileUpdateDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FileViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.entity.DesignEntity;
+import ru.vsu.portalforembroidery.model.entity.DesignFileEntity;
 import ru.vsu.portalforembroidery.model.entity.FileEntity;
-import ru.vsu.portalforembroidery.model.entity.FolderEntity;
+import ru.vsu.portalforembroidery.repository.DesignFileRepository;
+import ru.vsu.portalforembroidery.repository.DesignRepository;
 import ru.vsu.portalforembroidery.repository.FileRepository;
-import ru.vsu.portalforembroidery.repository.FolderRepository;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;
@@ -34,39 +36,27 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
     @Value("${pagination.defaultPageSize}")
     private int defaultPageSize;
 
+    private final DesignFileRepository designFileRepository;
+    private final DesignRepository designRepository;
     private final FileRepository fileRepository;
-    private final FolderRepository folderRepository;
     private final FileMapper fileMapper;
 
     @Override
     @Transactional
     public int createFile(FileDto fileDto) {
-        final FolderEntity folderEntity = getFolder(fileDto);
         final FileEntity fileEntity = Optional.of(fileDto)
                 .map(fileMapper::fileDtoToFileEntity)
-                .map((file) -> {
-                    file.setFolder(folderEntity);
-                    fileRepository.save(file);
-                    return file;
-                })
+                .map(fileRepository::save)
                 .orElseThrow(() -> new EntityCreationException("File hasn't been created!"));
-        log.info("File with id = {} has been created.", fileEntity.getId());
-        return fileEntity.getId();
-    }
 
-    private FolderEntity getFolder(FileDto fileDto) {
-        if (fileDto.getFolderId() != null) {
-            final Optional<FolderEntity> folderEntityOptional = folderRepository.findById(fileDto.getFolderId());
-            if (folderEntityOptional.isPresent()) {
-                log.info("Folder has been found.");
-                return folderEntityOptional.get();
-            } else {
-                log.warn("Folder hasn't been found.");
-                throw new EntityNotFoundException("Folder not found!");
-            }
-        } else {
-            return null;
-        }
+        Integer fileId = fileEntity.getId();
+        Integer designId = fileDto.getDesignId();
+        designFileRepository.save(DesignFileEntity.builder()
+                .file(FileEntity.builder().id(fileId).build())
+                .design(DesignEntity.builder().id(designId).build())
+                .build());
+        log.info("File with id = {} has been created.", fileId);
+        return fileId;
     }
 
     @Override
@@ -126,13 +116,16 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<FileForListDto> getViewListPage(int folderId, String page, String size) {
+    public ViewListPage<FileForListDto> getViewListPage(int designId, String page, String size) {
         final int pageNumber = Optional.ofNullable(page).map(ParseUtils::parsePositiveInteger).orElse(defaultPageNumber);
         final int pageSize = Optional.ofNullable(size).map(ParseUtils::parsePositiveInteger).orElse(defaultPageSize);
 
-        final Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        final List<FileForListDto> listFiles = listFilesByFolder(folderId, pageable);
-        final int totalAmount = numberOfFilesByFolder(folderId);
+        Optional<DesignEntity> optionalDesignEntity = designRepository.findById(designId);
+        DesignEntity designEntity = optionalDesignEntity.orElseThrow(() -> new EntityNotFoundException("Design not found!"));
+        List<FileEntity> files = designEntity.getFiles().stream().toList();
+
+        final List<FileForListDto> listFiles = fileMapper.fileEntitiesToFileForListDtoList(files);
+        final int totalAmount = files.size();
 
         return getViewListPage(totalAmount, pageSize, pageNumber, listFiles);
     }
@@ -146,23 +139,8 @@ public class FileServiceImpl implements FileService, PaginationService<FileForLi
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<FileForListDto> listFilesByFolder(int folderId, Pageable pageable) {
-        final List<FileEntity> fileEntities = fileRepository.findAllByFolderId(folderId, pageable).getContent();
-        log.info("There have been found {} files.", fileEntities.size());
-        return fileMapper.fileEntitiesToFileForListDtoList(fileEntities);
-    }
-
-    @Override
     public int numberOfFiles() {
         final long numberOfFiles = fileRepository.count();
-        log.info("There have been found {} files.", numberOfFiles);
-        return (int) numberOfFiles;
-    }
-
-    @Override
-    public int numberOfFilesByFolder(int folderId) {
-        final long numberOfFiles = fileRepository.countByFolderId(folderId);
         log.info("There have been found {} files.", numberOfFiles);
         return (int) numberOfFiles;
     }

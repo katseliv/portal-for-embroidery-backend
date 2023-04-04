@@ -11,6 +11,7 @@ public class DesignViewDto {
 
     private final Integer id;
     private final String name;
+    private final String folderName;
     private final String creatorDesignerFirstName;
     private final String creatorDesignerLastName;
 

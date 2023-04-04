@@ -42,3 +42,11 @@ databaseChangeLog:
         - sqlFile:
             path: PFE-001-202303021925.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: PFE-001-202304041935
+      author: EkaterinaSelivanova
+      comment: Alter Designs and Files Tables
+      changes:
+        - sqlFile:
+            path: PFE-001-202304041935.sql
+            relativeToChangelogFile: true

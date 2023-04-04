@@ -16,10 +16,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface FileMapper {
 
-    @Mapping(target = "folderId", source = "folder.id")
     FileDto fileEntityToFileDto(FileEntity entity);
 
-    @Mapping(target = "folderName", source = "folder.name")
     @Mapping(target = "base64StringFile", source = "file", qualifiedByName = "bytesArrayFile")
     FileViewDto fileEntityToFileViewDto(FileEntity entity);
 
@@ -28,7 +26,6 @@ public interface FileMapper {
         return Base64.getEncoder().encodeToString(file);
     }
 
-    @Mapping(target = "folder.id", source = "folderId")
     @Mapping(target = "file", source = "base64StringFile", qualifiedByName = "base64StringFile")
     FileEntity fileDtoToFileEntity(FileDto dto);
 
@@ -45,12 +42,10 @@ public interface FileMapper {
         return Base64.getDecoder().decode(base64StringFile);
     }
 
-    @Mapping(target = "folderName", source = "folder.name")
     FileForListDto fileEntityToFileForListDto(FileEntity entity);
 
     void mergeFileEntityAndFileUpdateDto(@MappingTarget FileEntity entity, FileUpdateDto dto);
 
-    @Mapping(target = "folderName", source = "folder.name")
     List<FileForListDto> fileEntitiesToFileForListDtoList(Iterable<FileEntity> entities);
 
 }

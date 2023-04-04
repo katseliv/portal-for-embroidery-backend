@@ -3,7 +3,7 @@ package ru.vsu.portalforembroidery.service;
 import org.springframework.data.domain.Pageable;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
 import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
-import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
+import ru.vsu.portalforembroidery.model.dto.view.DesignForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 
@@ -25,7 +25,7 @@ public interface FolderService {
 
     ViewListPage<FolderViewDto> getChildrenFolderViewListPage(int folderId, String page, String size);
 
-    ViewListPage<FileForListDto> getFileViewListPage(int id, String page, String size);
+    ViewListPage<DesignForListDto> getDesignViewListPage(int id, String page, String size);
 
     List<FolderViewDto> listFolders(Pageable pageable);
 

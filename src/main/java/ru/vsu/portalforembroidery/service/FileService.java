@@ -21,14 +21,10 @@ public interface FileService {
 
     ViewListPage<FileForListDto> getViewListPage(String page, String size);
 
-    ViewListPage<FileForListDto> getViewListPage(int folderId, String page, String size);
+    ViewListPage<FileForListDto> getViewListPage(int designId, String page, String size);
 
     List<FileForListDto> listFiles(Pageable pageable);
 
-    List<FileForListDto> listFilesByFolder(int folderId, Pageable pageable);
-
     int numberOfFiles();
-
-    int numberOfFilesByFolder(int folderId);
 
 }

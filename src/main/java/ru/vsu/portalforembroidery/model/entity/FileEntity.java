@@ -28,8 +28,4 @@ public class FileEntity {
     @Column(name = "file")
     private byte[] file;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "folder_id", referencedColumnName = "id")
-    private FolderEntity folder;
-
 }

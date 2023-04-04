@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class FileForListDto {
+public class DesignForListDto {
 
     private final Integer id;
     private final String name;

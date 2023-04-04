@@ -13,6 +13,5 @@ public class FileViewDto {
     private final String name;
     private final String extension;
     private final String base64StringFile;
-    private final String folderName;
 
 }

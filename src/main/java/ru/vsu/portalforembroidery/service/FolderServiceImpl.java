@@ -12,7 +12,7 @@ import ru.vsu.portalforembroidery.exception.EntityNotFoundException;
 import ru.vsu.portalforembroidery.mapper.FolderMapper;
 import ru.vsu.portalforembroidery.model.dto.FolderDto;
 import ru.vsu.portalforembroidery.model.dto.FolderUpdateDto;
-import ru.vsu.portalforembroidery.model.dto.view.FileForListDto;
+import ru.vsu.portalforembroidery.model.dto.view.DesignForListDto;
 import ru.vsu.portalforembroidery.model.dto.view.FolderViewDto;
 import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
 import ru.vsu.portalforembroidery.model.entity.FolderEntity;
@@ -34,7 +34,7 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
     @Value("${pagination.defaultPageSize}")
     private int defaultPageSize;
 
-    private final FileService fileService;
+    private final DesignService designService;
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
     private final FolderMapper folderMapper;
@@ -169,8 +169,8 @@ public class FolderServiceImpl implements FolderService, PaginationService<Folde
 
     @Override
     @Transactional(readOnly = true)
-    public ViewListPage<FileForListDto> getFileViewListPage(int id, String page, String size) {
-        return fileService.getViewListPage(id, page, size);
+    public ViewListPage<DesignForListDto> getDesignViewListPage(int id, String page, String size) {
+        return designService.getViewListPage(id, page, size);
     }
 
     @Override

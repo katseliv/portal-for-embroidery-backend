@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.portalforembroidery.model.dto.DesignDto;
-import ru.vsu.portalforembroidery.model.dto.view.DesignViewDto;
-import ru.vsu.portalforembroidery.model.dto.view.ViewListPage;
+import ru.vsu.portalforembroidery.model.dto.DesignUpdateDto;
+import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.service.DesignService;
 
 import javax.validation.Valid;
@@ -31,8 +31,8 @@ public class DesignRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateDesign(@PathVariable final int id, @RequestBody @Valid final DesignDto designDto) {
-        designService.updateDesignById(id, designDto);
+    public ResponseEntity<String> updateDesign(@PathVariable final int id, @RequestBody @Valid final DesignUpdateDto designUpdateDto) {
+        designService.updateDesignById(id, designUpdateDto);
         return new ResponseEntity<>("Design was updated!", HttpStatus.OK);
     }
 
@@ -42,8 +42,14 @@ public class DesignRestController {
     }
 
     @GetMapping
-    public ViewListPage<DesignViewDto> getDesigns() {
-        return designService.getViewListPage();
+    public ViewListPage<DesignForListDto> getDesigns(@RequestParam(required = false) final Map<String, String> allParams) {
+        return designService.getViewListPage(allParams.get("page"), allParams.get("size"));
+    }
+
+    @GetMapping("/{id}/files")
+    public ViewListPage<FileForListDto> getDesignFiles(@PathVariable final int id,
+                                                       @RequestParam(required = false) final Map<String, String> allParams) {
+        return designService.getFileViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
 }
