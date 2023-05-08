@@ -1,4 +1,4 @@
-package ru.vsu.portalforembroidery.service;
+package ru.vsu.portalforembroidery.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +20,8 @@ import ru.vsu.portalforembroidery.model.entity.PlacementPositionEntity;
 import ru.vsu.portalforembroidery.repository.DesignRepository;
 import ru.vsu.portalforembroidery.repository.ModelPhotoRepository;
 import ru.vsu.portalforembroidery.repository.PlacementPositionRepository;
+import ru.vsu.portalforembroidery.service.ModelPhotoService;
+import ru.vsu.portalforembroidery.service.PaginationService;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.List;

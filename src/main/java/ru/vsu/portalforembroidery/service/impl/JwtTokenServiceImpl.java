@@ -1,4 +1,4 @@
-package ru.vsu.portalforembroidery.service;
+package ru.vsu.portalforembroidery.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import ru.vsu.portalforembroidery.model.entity.JwtTokenEntity;
 import ru.vsu.portalforembroidery.model.entity.UserEntity;
 import ru.vsu.portalforembroidery.repository.JwtTokenRepository;
 import ru.vsu.portalforembroidery.repository.UserRepository;
+import ru.vsu.portalforembroidery.service.JwtTokenService;
 
 import java.util.Optional;
 

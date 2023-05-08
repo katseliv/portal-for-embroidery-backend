@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import ru.vsu.portalforembroidery.mapper.UserMapper;
 import ru.vsu.portalforembroidery.repository.UserRepository;
-import ru.vsu.portalforembroidery.service.UserDetailsServiceImpl;
+import ru.vsu.portalforembroidery.service.impl.UserDetailsServiceImpl;
 
 import java.util.Collections;
 import java.util.List;

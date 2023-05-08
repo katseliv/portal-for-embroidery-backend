@@ -51,7 +51,7 @@ public class DesignerProfileRestController {
     }
 
     @GetMapping("/{id}/posts")
-    public FilteredViewListPage<PostForListDto> getPostsDesigner(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
+    public FilteredViewListPage<PostForListDto> getDesignerPosts(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
         return designerProfileService.getFilteredPostViewListPage(id, allParams.get("page"), allParams.get("size"), allParams.get("tagName"));
     }
 

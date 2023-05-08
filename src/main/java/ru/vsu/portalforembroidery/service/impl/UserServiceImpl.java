@@ -1,4 +1,4 @@
-package ru.vsu.portalforembroidery.service;
+package ru.vsu.portalforembroidery.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,10 @@ import ru.vsu.portalforembroidery.model.entity.PostEntity;
 import ru.vsu.portalforembroidery.model.entity.UserEntity;
 import ru.vsu.portalforembroidery.repository.PostRepository;
 import ru.vsu.portalforembroidery.repository.UserRepository;
+import ru.vsu.portalforembroidery.service.FolderService;
+import ru.vsu.portalforembroidery.service.PaginationService;
+import ru.vsu.portalforembroidery.service.PostService;
+import ru.vsu.portalforembroidery.service.UserService;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.util.*;

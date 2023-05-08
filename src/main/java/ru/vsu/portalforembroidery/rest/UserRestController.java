@@ -59,12 +59,12 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}/posts")
-    public FilteredViewListPage<PostForListDto> getPostsUser(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
+    public FilteredViewListPage<PostForListDto> getUserPosts(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
         return userService.getFilteredPostViewListPage(id, allParams.get("page"), allParams.get("size"), allParams.get("tagName"));
     }
 
     @GetMapping("/{id}/folders")
-    public ViewListPage<FolderViewDto> getFoldersUser(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
+    public ViewListPage<FolderViewDto> getUserFolders(@PathVariable final int id, @RequestParam(required = false) final Map<String, String> allParams) {
         return userService.getFolderViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 

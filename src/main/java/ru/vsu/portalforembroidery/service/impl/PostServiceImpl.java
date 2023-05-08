@@ -1,4 +1,4 @@
-package ru.vsu.portalforembroidery.service;
+package ru.vsu.portalforembroidery.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,9 @@ import ru.vsu.portalforembroidery.model.dto.*;
 import ru.vsu.portalforembroidery.model.dto.view.*;
 import ru.vsu.portalforembroidery.model.entity.*;
 import ru.vsu.portalforembroidery.repository.*;
+import ru.vsu.portalforembroidery.service.CommentService;
+import ru.vsu.portalforembroidery.service.PaginationService;
+import ru.vsu.portalforembroidery.service.PostService;
 import ru.vsu.portalforembroidery.utils.ParseUtils;
 
 import java.time.LocalDateTime;

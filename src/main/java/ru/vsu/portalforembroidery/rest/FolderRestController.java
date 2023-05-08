@@ -50,13 +50,13 @@ public class FolderRestController {
     }
 
     @GetMapping("/{id}/folders")
-    public ViewListPage<FolderViewDto> getFoldersParentFolder(@PathVariable final int id,
+    public ViewListPage<FolderViewDto> getParentFolderFolders(@PathVariable final int id,
                                                               @RequestParam(required = false) final Map<String, String> allParams) {
         return folderService.getChildrenFolderViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
 
     @GetMapping("/{id}/designs")
-    public ViewListPage<DesignForListDto> getDesignsFolder(@PathVariable final int id,
+    public ViewListPage<DesignForListDto> getFolderDesigns(@PathVariable final int id,
                                                            @RequestParam(required = false) final Map<String, String> allParams) {
         return folderService.getDesignViewListPage(id, allParams.get("page"), allParams.get("size"));
     }
